@@ -1,0 +1,10335 @@
+{
+ "build": "3.3.5.12340",
+ "source": {
+  "name": "WoWDBDefs",
+  "url": "https://github.com/wowdev/WoWDBDefs",
+  "commit": "8308f39154b540e71e7e6e896be1ae28261f4e8c",
+  "license": "CC BY-SA 4.0"
+ },
+ "tables": {
+  "Achievement": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Faction",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Instance_ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "Supercedes",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Achievement::ID"
+   },
+   {
+    "name": "Title_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Description_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Category",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Achievement_Category::ID"
+   },
+   {
+    "name": "Points",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Ui_order",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "IconID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellIcon::ID"
+   },
+   {
+    "name": "Reward_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Minimum_criteria",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Shares_criteria",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Achievement::ID"
+   }
+  ],
+  "Achievement_Category": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Parent",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Achievement_Category::ID"
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Ui_order",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "Achievement_Criteria": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Achievement_ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Achievement::ID"
+   },
+   {
+    "name": "Type",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Asset_ID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Quantity",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Start_event",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Start_asset",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Fail_event",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Fail_asset",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Description_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Timer_start_event",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Timer_asset_ID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Timer_time",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Ui_order",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "AnimationData": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "Weaponflags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Bodyflags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Fallback",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AnimationData::ID"
+   },
+   {
+    "name": "BehaviorID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AnimationData::ID"
+   },
+   {
+    "name": "BehaviorTier",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "AreaGroup": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "AreaID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 6,
+    "fk": "AreaTable::ID"
+   },
+   {
+    "name": "NextAreaID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AreaGroup::ID"
+   }
+  ],
+  "AreaPOI": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Importance",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Icon",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 9
+   },
+   {
+    "name": "FactionID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "FactionTemplate::ID"
+   },
+   {
+    "name": "Pos",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "ContinentID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AreaID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AreaTable::ID"
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Description_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "WorldStateID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "WorldState::ID"
+   },
+   {
+    "name": "WorldMapLink",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "AreaTable": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ContinentID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "ParentAreaID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AreaTable::ID"
+   },
+   {
+    "name": "AreaBit",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundProviderPref",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundProviderPreferences::ID"
+   },
+   {
+    "name": "SoundProviderPrefUnderwater",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundProviderPreferences::ID"
+   },
+   {
+    "name": "AmbienceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundAmbience::ID"
+   },
+   {
+    "name": "ZoneMusic",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ZoneMusic::ID"
+   },
+   {
+    "name": "IntroSound",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ZoneIntroMusicTable::ID"
+   },
+   {
+    "name": "ExplorationLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AreaName_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "FactionGroupMask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "LiquidTypeID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4,
+    "fk": "LiquidType::ID"
+   },
+   {
+    "name": "MinElevation",
+    "type": "float"
+   },
+   {
+    "name": "Ambient_multiplier",
+    "type": "float"
+   },
+   {
+    "name": "LightID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Light::ID"
+   }
+  ],
+  "AreaTrigger": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ContinentID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "Pos",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "Radius",
+    "type": "float"
+   },
+   {
+    "name": "Box_length",
+    "type": "float"
+   },
+   {
+    "name": "Box_width",
+    "type": "float"
+   },
+   {
+    "name": "Box_height",
+    "type": "float"
+   },
+   {
+    "name": "Box_yaw",
+    "type": "float"
+   }
+  ],
+  "AttackAnimKits": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ItemSubclassID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AnimTypeID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AttackAnimTypes::AnimID"
+   },
+   {
+    "name": "AnimFrequency",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "WhichHand",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "AttackAnimTypes": [
+   {
+    "name": "AnimID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AnimName",
+    "type": "string"
+   }
+  ],
+  "AuctionHouse": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "FactionID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Faction::ID"
+   },
+   {
+    "name": "DepositRate",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ConsignmentRate",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "BankBagSlotPrices": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Cost",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "BannedAddons": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "NameMD5",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   },
+   {
+    "name": "VersionMD5",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   },
+   {
+    "name": "LastModified",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "BarberShopStyle": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Type",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DisplayName_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Description_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Cost_Modifier",
+    "type": "float"
+   },
+   {
+    "name": "Race",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ChrRaces::ID"
+   },
+   {
+    "name": "Sex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Data",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "BattlemasterList": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "InstanceType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "GroupsAllowed",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "MaxGroupSize",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "HolidayWorldState",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "WorldState::ID"
+   },
+   {
+    "name": "MinLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MaxLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "CameraShakes": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ShakeType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Direction",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Amplitude",
+    "type": "float"
+   },
+   {
+    "name": "Frequency",
+    "type": "float"
+   },
+   {
+    "name": "Duration",
+    "type": "float"
+   },
+   {
+    "name": "Phase",
+    "type": "float"
+   },
+   {
+    "name": "Coefficient",
+    "type": "float"
+   }
+  ],
+  "Cfg_Categories": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "LocaleMask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Create_charsetMask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "Cfg_Configs": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "RealmType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "PlayerKillingAllowed",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Roleplaying",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "CharBaseInfo": [
+   {
+    "name": "RaceID",
+    "type": "int",
+    "size": 8,
+    "signed": true,
+    "fk": "ChrRaces::ID"
+   },
+   {
+    "name": "ClassID",
+    "type": "int",
+    "size": 8,
+    "signed": true,
+    "fk": "ChrClasses::ID"
+   }
+  ],
+  "CharHairGeosets": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "RaceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ChrRaces::ID"
+   },
+   {
+    "name": "SexID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "VariationID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "GeosetID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Showscalp",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "CharHairTextures": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Field_0_5_3_3368_001_race",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ChrRaces::ID"
+   },
+   {
+    "name": "Field_0_5_3_3368_002_gender",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_0_5_3_3368_003",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_0_5_3_3368_004_mayberacemask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_0_5_3_3368_005_the_x_in_hair_xy_blp",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_0_5_3_3368_006",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_0_5_3_3368_007",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "CharSections": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "RaceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ChrRaces::ID"
+   },
+   {
+    "name": "SexID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "BaseSection",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TextureName",
+    "type": "string",
+    "array": 3
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "VariationIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ColorIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "CharStartOutfit": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "RaceID",
+    "type": "int",
+    "size": 8,
+    "signed": true,
+    "fk": "ChrRaces::ID"
+   },
+   {
+    "name": "ClassID",
+    "type": "int",
+    "size": 8,
+    "signed": true,
+    "fk": "ChrClasses::ID"
+   },
+   {
+    "name": "SexID",
+    "type": "int",
+    "size": 8,
+    "signed": true
+   },
+   {
+    "name": "OutfitID",
+    "type": "int",
+    "size": 8,
+    "signed": true
+   },
+   {
+    "name": "ItemID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 24,
+    "fk": "Item::ID"
+   },
+   {
+    "name": "DisplayItemID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 24,
+    "fk": "ItemDisplayInfo::ID"
+   },
+   {
+    "name": "InventoryType",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 24
+   }
+  ],
+  "CharTitles": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Condition_ID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Name1_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Mask_ID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "CharVariations": [
+   {
+    "name": "RaceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ChrRaces::ID"
+   },
+   {
+    "name": "SexID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TextureHoldLayer",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   }
+  ],
+  "CharacterFacialHairStyles": [
+   {
+    "name": "RaceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ChrRaces::ID"
+   },
+   {
+    "name": "SexID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "VariationID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Geoset",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 5
+   }
+  ],
+  "ChatChannels": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "FactionGroup",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Shortcut_lang",
+    "type": "locstring"
+   }
+  ],
+  "ChatProfanity": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Text",
+    "type": "string"
+   },
+   {
+    "name": "Language",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "ChrClasses": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "DamageBonusStat",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DisplayPower",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "PowerType::PowerTypeEnum"
+   },
+   {
+    "name": "PetNameToken",
+    "type": "string"
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Name_female_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Name_male_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Filename",
+    "type": "string"
+   },
+   {
+    "name": "SpellClassSet",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CinematicSequenceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "CinematicSequences::ID"
+   },
+   {
+    "name": "Required_expansion",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "ChrRaces": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "FactionID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "FactionTemplate::ID"
+   },
+   {
+    "name": "ExplorationSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "MaleDisplayID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "CreatureDisplayInfo::ID"
+   },
+   {
+    "name": "FemaleDisplayID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "CreatureDisplayInfo::ID"
+   },
+   {
+    "name": "ClientPrefix",
+    "type": "string"
+   },
+   {
+    "name": "BaseLanguage",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Languages::ID"
+   },
+   {
+    "name": "CreatureType",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "CreatureType::ID"
+   },
+   {
+    "name": "ResSicknessSpellID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Spell::ID"
+   },
+   {
+    "name": "SplashSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "ClientFileString",
+    "type": "string"
+   },
+   {
+    "name": "CinematicSequenceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "CinematicSequences::ID"
+   },
+   {
+    "name": "Alliance",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Name_female_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Name_male_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "FacialHairCustomization",
+    "type": "string",
+    "array": 2
+   },
+   {
+    "name": "HairCustomization",
+    "type": "string"
+   },
+   {
+    "name": "Required_expansion",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "CinematicCamera": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Model",
+    "type": "string"
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "Origin",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "OriginFacing",
+    "type": "float"
+   }
+  ],
+  "CinematicSequences": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "Camera",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8,
+    "fk": "CinematicCamera::ID"
+   }
+  ],
+  "CreatureDisplayInfo": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ModelID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "CreatureModelData::ID"
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "CreatureSoundData::ID"
+   },
+   {
+    "name": "ExtendedDisplayInfoID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "CreatureDisplayInfoExtra::ID"
+   },
+   {
+    "name": "CreatureModelScale",
+    "type": "float"
+   },
+   {
+    "name": "CreatureModelAlpha",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TextureVariation",
+    "type": "string",
+    "array": 3
+   },
+   {
+    "name": "PortraitTextureName",
+    "type": "string"
+   },
+   {
+    "name": "SizeClass",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "BloodID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "UnitBlood::ID"
+   },
+   {
+    "name": "NPCSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "NPCSounds::ID"
+   },
+   {
+    "name": "ParticleColorID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ParticleColor::ID"
+   },
+   {
+    "name": "CreatureGeosetData",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ObjectEffectPackageID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ObjectEffectPackage::ID"
+   }
+  ],
+  "CreatureDisplayInfoExtra": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "DisplayRaceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ChrRaces::ID"
+   },
+   {
+    "name": "DisplaySexID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SkinID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "FaceID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "HairStyleID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "HairColorID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "FacialHairID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "NPCItemDisplay",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 11,
+    "fk": "ItemDisplayInfo::ID"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "BakeName",
+    "type": "string"
+   }
+  ],
+  "CreatureFamily": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MinScale",
+    "type": "float"
+   },
+   {
+    "name": "MinScaleLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MaxScale",
+    "type": "float"
+   },
+   {
+    "name": "MaxScaleLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SkillLine",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2,
+    "fk": "SkillLine::ID"
+   },
+   {
+    "name": "PetFoodMask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "PetTalentType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CategoryEnumID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "IconFile",
+    "type": "string"
+   }
+  ],
+  "CreatureModelData": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ModelName",
+    "type": "string"
+   },
+   {
+    "name": "SizeClass",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ModelScale",
+    "type": "float"
+   },
+   {
+    "name": "BloodID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "UnitBlood::ID"
+   },
+   {
+    "name": "FootprintTextureID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "FootprintTextures::ID"
+   },
+   {
+    "name": "FootprintTextureLength",
+    "type": "float"
+   },
+   {
+    "name": "FootprintTextureWidth",
+    "type": "float"
+   },
+   {
+    "name": "FootprintParticleScale",
+    "type": "float"
+   },
+   {
+    "name": "FoleyMaterialID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Material::ID"
+   },
+   {
+    "name": "FootstepShakeSize",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DeathThudShakeSize",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "CreatureSoundData::ID"
+   },
+   {
+    "name": "CollisionWidth",
+    "type": "float"
+   },
+   {
+    "name": "CollisionHeight",
+    "type": "float"
+   },
+   {
+    "name": "MountHeight",
+    "type": "float"
+   },
+   {
+    "name": "GeoBoxMinX",
+    "type": "float"
+   },
+   {
+    "name": "GeoBoxMinY",
+    "type": "float"
+   },
+   {
+    "name": "GeoBoxMinZ",
+    "type": "float"
+   },
+   {
+    "name": "GeoBoxMaxX",
+    "type": "float"
+   },
+   {
+    "name": "GeoBoxMaxY",
+    "type": "float"
+   },
+   {
+    "name": "GeoBoxMaxZ",
+    "type": "float"
+   },
+   {
+    "name": "WorldEffectScale",
+    "type": "float"
+   },
+   {
+    "name": "AttachedEffectScale",
+    "type": "float"
+   },
+   {
+    "name": "MissileCollisionRadius",
+    "type": "float"
+   },
+   {
+    "name": "MissileCollisionPush",
+    "type": "float"
+   },
+   {
+    "name": "MissileCollisionRaise",
+    "type": "float"
+   }
+  ],
+  "CreatureMovementInfo": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SmoothFacingChaseRate",
+    "type": "float"
+   }
+  ],
+  "CreatureSoundData": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SoundExertionID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundExertionCriticalID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundInjuryID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundInjuryCriticalID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundInjuryCrushingBlowID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundDeathID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundStunID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundStandID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundFootstepID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "FootstepTerrainLookup::CreatureFootstepID"
+   },
+   {
+    "name": "SoundAggroID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundWingFlapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundWingGlideID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundAlertID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundFidget",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 5,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "CustomAttack",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "NPCSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "LoopSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "CreatureImpactType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundJumpStartID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundJumpEndID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundPetAttackID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundPetOrderID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundPetDismissID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "FidgetDelaySecondsMin",
+    "type": "float"
+   },
+   {
+    "name": "FidgetDelaySecondsMax",
+    "type": "float"
+   },
+   {
+    "name": "BirthSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SpellCastDirectedSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SubmergeSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SubmergedSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "CreatureSoundDataIDPet",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "CreatureSoundData::ID"
+   }
+  ],
+  "CreatureSpellData": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Spells",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4,
+    "fk": "Spell::ID"
+   },
+   {
+    "name": "Availability",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   }
+  ],
+  "CreatureType": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "CurrencyCategory": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "CurrencyTypes": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ItemID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Item::ID"
+   },
+   {
+    "name": "CategoryID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "CurrencyCategory::ID"
+   },
+   {
+    "name": "BitIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "DanceMoves": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Type",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Param",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Fallback",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Racemask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Internal_name",
+    "type": "string"
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "LockID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Lock::ID"
+   }
+  ],
+  "DeathThudLookups": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SizeClass",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TerrainTypeSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "TerrainTypeSounds::ID"
+   },
+   {
+    "name": "SoundEntryID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundEntryIDWater",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   }
+  ],
+  "DeclinedWord": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Word",
+    "type": "string"
+   }
+  ],
+  "DeclinedWordCases": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "DeclinedWordID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "DeclinedWord::ID"
+   },
+   {
+    "name": "CaseIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DeclinedWord",
+    "type": "string"
+   }
+  ],
+  "DestructibleModelData": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "State0ImpactEffectDoodadSet",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "State0AmbientDoodadSet",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "State1WMO",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "GameObjectDisplayInfo::ID"
+   },
+   {
+    "name": "State1DestructionDoodadSet",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "State1ImpactEffectDoodadSet",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "State1AmbientDoodadSet",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "State2WMO",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "GameObjectDisplayInfo::ID"
+   },
+   {
+    "name": "State2DestructionDoodadSet",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "State2ImpactEffectDoodadSet",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "State2AmbientDoodadSet",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "State3WMO",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "GameObjectDisplayInfo::ID"
+   },
+   {
+    "name": "State3InitDoodadSet",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "State3AmbientDoodadSet",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EjectDirection",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RepairGroundFx",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DoNotHighlight",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "HealEffect",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "HealEffectSpeed",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "DungeonEncounter": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "Difficulty",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "OrderIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Bit",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "SpellIconID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellIcon::ID"
+   }
+  ],
+  "DungeonMap": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "FloorIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MinX",
+    "type": "float"
+   },
+   {
+    "name": "MaxX",
+    "type": "float"
+   },
+   {
+    "name": "MinY",
+    "type": "float"
+   },
+   {
+    "name": "MaxY",
+    "type": "float"
+   },
+   {
+    "name": "ParentWorldMapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "WorldMapArea::ID"
+   }
+  ],
+  "DungeonMapChunk": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "WMOGroupID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "WMOAreaTable::WMOGroupID"
+   },
+   {
+    "name": "DungeonMapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "DungeonMap::ID"
+   },
+   {
+    "name": "MinZ",
+    "type": "float"
+   }
+  ],
+  "DurabilityCosts": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "WeaponSubClassCost",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 21
+   },
+   {
+    "name": "ArmorSubClassCost",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8
+   }
+  ],
+  "DurabilityQuality": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ],
+  "Emotes": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "EmoteSlashCommand",
+    "type": "string"
+   },
+   {
+    "name": "AnimID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AnimationData::ID"
+   },
+   {
+    "name": "EmoteFlags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EmoteSpecProc",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EmoteSpecProcParam",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EventSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   }
+  ],
+  "EmotesText": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "EmoteID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Emotes::ID"
+   },
+   {
+    "name": "EmoteText",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 16,
+    "fk": "EmotesTextData::ID"
+   }
+  ],
+  "EmotesTextData": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Text_lang",
+    "type": "locstring"
+   }
+  ],
+  "EmotesTextSound": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "EmotesTextID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "EmotesText::ID"
+   },
+   {
+    "name": "RaceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ChrRaces::ID"
+   },
+   {
+    "name": "SexID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   }
+  ],
+  "EnvironmentalDamage": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "EnumID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "VisualkitID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   }
+  ],
+  "Exhaustion": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Xp",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Factor",
+    "type": "float"
+   },
+   {
+    "name": "OutdoorHours",
+    "type": "float"
+   },
+   {
+    "name": "InnHours",
+    "type": "float"
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Threshold",
+    "type": "float"
+   }
+  ],
+  "Faction": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ReputationIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ReputationRaceMask",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   },
+   {
+    "name": "ReputationClassMask",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   },
+   {
+    "name": "ReputationBase",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   },
+   {
+    "name": "ReputationFlags",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   },
+   {
+    "name": "ParentFactionID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Faction::ID"
+   },
+   {
+    "name": "ParentFactionMod",
+    "type": "float",
+    "array": 2
+   },
+   {
+    "name": "ParentFactionCap",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Description_lang",
+    "type": "locstring"
+   }
+  ],
+  "FactionGroup": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MaskID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "InternalName",
+    "type": "string"
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "FactionTemplate": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Faction",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Faction::ID"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "FactionGroup",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "FactionGroup::ID"
+   },
+   {
+    "name": "FriendGroup",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EnemyGroup",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Enemies",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4,
+    "fk": "Faction::ID"
+   },
+   {
+    "name": "Friend",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4,
+    "fk": "Faction::ID"
+   }
+  ],
+  "FileData": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Filename",
+    "type": "string"
+   },
+   {
+    "name": "Filepath",
+    "type": "string"
+   }
+  ],
+  "FootprintTextures": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "FootstepFilename",
+    "type": "string"
+   }
+  ],
+  "FootstepTerrainLookup": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "CreatureFootstepID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualEffectName::ID"
+   },
+   {
+    "name": "TerrainSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "TerrainTypeSounds::ID"
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundIDSplash",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   }
+  ],
+  "GMSurveyAnswers": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Sort_Index",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "GMSurveyQuestionID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "GMSurveyQuestions::ID"
+   },
+   {
+    "name": "Answer_lang",
+    "type": "locstring"
+   }
+  ],
+  "GMSurveyCurrentSurvey": [
+   {
+    "name": "LANGID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "GMSURVEY_ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "GMSurveySurveys::ID"
+   }
+  ],
+  "GMSurveyQuestions": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Question_lang",
+    "type": "locstring"
+   }
+  ],
+  "GMSurveySurveys": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Q",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 10,
+    "fk": "GMSurveyQuestions::ID"
+   }
+  ],
+  "GMTicketCategory": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Category_lang",
+    "type": "locstring"
+   }
+  ],
+  "GameObjectArtKit": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "TextureVariation",
+    "type": "string",
+    "array": 3
+   },
+   {
+    "name": "AttachModel",
+    "type": "string",
+    "array": 4
+   }
+  ],
+  "GameObjectDisplayInfo": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ModelName",
+    "type": "string"
+   },
+   {
+    "name": "Sound",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 10
+   },
+   {
+    "name": "GeoBoxMin",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "GeoBoxMax",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "ObjectEffectPackageID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ObjectEffectPackage::ID"
+   }
+  ],
+  "GameTables": [
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "NumRows",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "NumColumns",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "GameTips": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Text_lang",
+    "type": "locstring"
+   }
+  ],
+  "GemProperties": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Enchant_ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellItemEnchantment::ID"
+   },
+   {
+    "name": "Maxcount_inv",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Maxcount_item",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Type",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "GlyphProperties": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SpellID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Spell::ID"
+   },
+   {
+    "name": "GlyphSlotFlags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SpellIconID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellIcon::ID"
+   }
+  ],
+  "GlyphSlot": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Type",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Tooltip",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "GroundEffectDoodad": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Doodadpath",
+    "type": "string"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "GroundEffectTexture": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "DoodadID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   },
+   {
+    "name": "DoodadWeight",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   },
+   {
+    "name": "Density",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Sound",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "HelmetGeosetVisData": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "HideGeoset",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 7
+   }
+  ],
+  "HolidayDescriptions": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Description_lang",
+    "type": "locstring"
+   }
+  ],
+  "HolidayNames": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "Holidays": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Duration",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 10
+   },
+   {
+    "name": "Date",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 26
+   },
+   {
+    "name": "Region",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Looping",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CalendarFlags",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 10
+   },
+   {
+    "name": "HolidayNameID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "HolidayNames::ID"
+   },
+   {
+    "name": "HolidayDescriptionID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "HolidayDescriptions::ID"
+   },
+   {
+    "name": "TextureFileName",
+    "type": "string"
+   },
+   {
+    "name": "Priority",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CalendarFilterType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "Item": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ClassID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ItemClass::ClassID"
+   },
+   {
+    "name": "SubclassID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Sound_override_subclassID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Material",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Material::ID"
+   },
+   {
+    "name": "DisplayInfoID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "InventoryType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SheatheType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "ItemBagFamily": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "ItemClass": [
+   {
+    "name": "ClassID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SubclassMapID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ClassName_lang",
+    "type": "locstring"
+   }
+  ],
+  "ItemCondExtCosts": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "CondExtendedCost",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ItemExtendedCostEntry",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ItemExtendedCost::ID"
+   },
+   {
+    "name": "ArenaSeason",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "ItemDisplayInfo": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ModelName",
+    "type": "string",
+    "array": 2
+   },
+   {
+    "name": "ModelTexture",
+    "type": "string",
+    "array": 2
+   },
+   {
+    "name": "InventoryIcon",
+    "type": "string",
+    "array": 2
+   },
+   {
+    "name": "GeosetGroup",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SpellVisualID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisual::ID"
+   },
+   {
+    "name": "GroupSoundIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "HelmetGeosetVisID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2
+   },
+   {
+    "name": "Texture",
+    "type": "string",
+    "array": 8
+   },
+   {
+    "name": "ItemVisual",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ParticleColorID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ParticleColor::ID"
+   }
+  ],
+  "ItemExtendedCost": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "HonorPoints",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ArenaPoints",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ArenaBracket",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ItemID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 5,
+    "fk": "Item::ID"
+   },
+   {
+    "name": "ItemCount",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 5
+   },
+   {
+    "name": "RequiredArenaRating",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ItemPurchaseGroup",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ItemPurchaseGroup::ID"
+   }
+  ],
+  "ItemGroupSounds": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Sound",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   }
+  ],
+  "ItemLimitCategory": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Quantity",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "ItemPetFood": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "ItemPurchaseGroup": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ItemID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8,
+    "fk": "Item::ID"
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "ItemRandomProperties": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "Enchantment",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 5,
+    "fk": "SpellItemEnchantment::ID"
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "ItemRandomSuffix": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "InternalName",
+    "type": "string"
+   },
+   {
+    "name": "Enchantment",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 5,
+    "fk": "SpellItemEnchantment::ID"
+   },
+   {
+    "name": "AllocationPct",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 5
+   }
+  ],
+  "ItemSet": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "ItemID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 17,
+    "fk": "Item::ID"
+   },
+   {
+    "name": "SetSpellID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8,
+    "fk": "Spell::ID"
+   },
+   {
+    "name": "SetThreshold",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8
+   },
+   {
+    "name": "RequiredSkill",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SkillLine::ID"
+   },
+   {
+    "name": "RequiredSkillRank",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "ItemSubClass": [
+   {
+    "name": "ClassID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ItemClass::ClassID"
+   },
+   {
+    "name": "SubClassID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "PrerequisiteProficiency",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "PostrequisiteProficiency",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DisplayFlags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "WeaponParrySeq",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "WeaponReadySeq",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "WeaponAttackSeq",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "WeaponSwingSize",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DisplayName_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "VerboseName_lang",
+    "type": "locstring"
+   }
+  ],
+  "ItemSubClassMask": [
+   {
+    "name": "ClassID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ItemClass::ClassID"
+   },
+   {
+    "name": "Mask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "ItemVisualEffects": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Model",
+    "type": "string"
+   }
+  ],
+  "ItemVisuals": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Slot",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 5
+   }
+  ],
+  "LFGDungeonExpansion": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Lfg_ID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Expansion_level",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Random_ID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Hard_level_min",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Hard_level_max",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Target_level_min",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Target_level_max",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "LFGDungeonGroup": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Order_index",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Parent_group_ID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TypeID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "LFGDungeons": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "MinLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MaxLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Target_level",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Target_level_min",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Target_level_max",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "Difficulty",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TypeID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Faction",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Faction::ID"
+   },
+   {
+    "name": "TextureFilename",
+    "type": "string"
+   },
+   {
+    "name": "ExpansionLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Order_index",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Group_ID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Description_lang",
+    "type": "locstring"
+   }
+  ],
+  "LanguageWords": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "LanguageID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Languages::ID"
+   },
+   {
+    "name": "Word",
+    "type": "string"
+   }
+  ],
+  "Languages": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "Light": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ContinentID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "GameCoords",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "GameFalloffStart",
+    "type": "float"
+   },
+   {
+    "name": "GameFalloffEnd",
+    "type": "float"
+   },
+   {
+    "name": "LightParamsID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8,
+    "fk": "LightParams::ID"
+   }
+  ],
+  "LightFloatBand": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Num",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Time",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 16
+   },
+   {
+    "name": "Data",
+    "type": "float",
+    "array": 16
+   }
+  ],
+  "LightIntBand": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Num",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Time",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 16
+   },
+   {
+    "name": "Data",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 16
+   }
+  ],
+  "LightParams": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "HighlightSky",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "LightSkyboxID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "LightSkybox::ID"
+   },
+   {
+    "name": "Glow",
+    "type": "float"
+   },
+   {
+    "name": "WaterShallowAlpha",
+    "type": "float"
+   },
+   {
+    "name": "WaterDeepAlpha",
+    "type": "float"
+   },
+   {
+    "name": "OceanShallowAlpha",
+    "type": "float"
+   },
+   {
+    "name": "OceanDeepAlpha",
+    "type": "float"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "LightSkybox": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "LiquidMaterial": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "LVF",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "LiquidType": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundBank",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SpellID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Spell::ID"
+   },
+   {
+    "name": "MaxDarkenDepth",
+    "type": "float"
+   },
+   {
+    "name": "FogDarkenIntensity",
+    "type": "float"
+   },
+   {
+    "name": "AmbDarkenIntensity",
+    "type": "float"
+   },
+   {
+    "name": "DirDarkenIntensity",
+    "type": "float"
+   },
+   {
+    "name": "LightID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Light::ID"
+   },
+   {
+    "name": "ParticleScale",
+    "type": "float"
+   },
+   {
+    "name": "ParticleMovement",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ParticleTexSlots",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MaterialID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "LiquidMaterial::ID"
+   },
+   {
+    "name": "Texture",
+    "type": "string",
+    "array": 6
+   },
+   {
+    "name": "Color",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2
+   },
+   {
+    "name": "Float",
+    "type": "float",
+    "array": 18
+   },
+   {
+    "name": "Int",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   }
+  ],
+  "LoadingScreenTaxiSplines": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "PathID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "TaxiPath::ID"
+   },
+   {
+    "name": "Locx",
+    "type": "float",
+    "array": 8
+   },
+   {
+    "name": "Locy",
+    "type": "float",
+    "array": 8
+   },
+   {
+    "name": "LegIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "LoadingScreens": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "FileName",
+    "type": "string"
+   },
+   {
+    "name": "HasWideScreen",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "Lock": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Type",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8
+   },
+   {
+    "name": "Index",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8
+   },
+   {
+    "name": "Skill",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8
+   },
+   {
+    "name": "Action",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8
+   }
+  ],
+  "LockType": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "ResourceName_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Verb_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "CursorName",
+    "type": "string"
+   }
+  ],
+  "MailTemplate": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Subject_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Body_lang",
+    "type": "locstring"
+   }
+  ],
+  "Map": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Directory",
+    "type": "string"
+   },
+   {
+    "name": "InstanceType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "PVP",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MapName_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "AreaTableID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AreaTable::ID"
+   },
+   {
+    "name": "MapDescription0_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "MapDescription1_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "LoadingScreenID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "LoadingScreens::ID"
+   },
+   {
+    "name": "MinimapIconScale",
+    "type": "float"
+   },
+   {
+    "name": "CorpseMapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "Corpse",
+    "type": "float",
+    "array": 2
+   },
+   {
+    "name": "TimeOfDayOverride",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ExpansionID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RaidOffset",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MaxPlayers",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "MapDifficulty": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "Difficulty",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Message_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "RaidDuration",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MaxPlayers",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Difficultystring",
+    "type": "string"
+   }
+  ],
+  "Material": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "FoleySoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundKit::ID"
+   },
+   {
+    "name": "SheatheSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundKit::ID"
+   },
+   {
+    "name": "UnsheatheSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundKit::ID"
+   }
+  ],
+  "Movie": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Filename",
+    "type": "string"
+   },
+   {
+    "name": "Volume",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "MovieFileData": [
+   {
+    "name": "FileDataID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true,
+    "fk": "FileData::ID"
+   },
+   {
+    "name": "Resolution",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "MovieVariation": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MovieID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Movie::ID"
+   },
+   {
+    "name": "FileDataID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "FileData::ID"
+   }
+  ],
+  "NPCSounds": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4,
+    "fk": "SoundKit::ID"
+   }
+  ],
+  "NameGen": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "RaceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ChrRaces::ID"
+   },
+   {
+    "name": "Sex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "NamesProfanity": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "Language",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "NamesReserved": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "Language",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "ObjectEffect": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "ObjectEffectGroupID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ObjectEffectGroup::ID"
+   },
+   {
+    "name": "TriggerType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EventType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EffectRecType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EffectRecID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundKit::ID"
+   },
+   {
+    "name": "Attachment",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Offset",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "ObjectEffectModifierID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ObjectEffectModifier::ID"
+   }
+  ],
+  "ObjectEffectGroup": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   }
+  ],
+  "ObjectEffectModifier": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "InputType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MapType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "OutputType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Param",
+    "type": "float",
+    "array": 4
+   }
+  ],
+  "ObjectEffectPackage": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   }
+  ],
+  "ObjectEffectPackageElem": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ObjectEffectPackageID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ObjectEffectPackage::ID"
+   },
+   {
+    "name": "ObjectEffectGroupID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ObjectEffectGroup::ID"
+   },
+   {
+    "name": "StateType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "OverrideSpellData": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Spells",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 10,
+    "fk": "Spell::ID"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "PVPDifficulty": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "RangeIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MinLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MaxLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Difficulty",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "Package": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Icon",
+    "type": "string"
+   },
+   {
+    "name": "Cost",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "PageTextMaterial": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   }
+  ],
+  "PaperDollItemFrame": [
+   {
+    "name": "ItemButtonName",
+    "type": "string"
+   },
+   {
+    "name": "SlotIcon",
+    "type": "string"
+   },
+   {
+    "name": "SlotNumber",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "ParticleColor": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Start",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "MID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "End",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   }
+  ],
+  "PetPersonality": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "HappinessThreshold",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "HappinessDamage",
+    "type": "float",
+    "array": 3
+   }
+  ],
+  "PetitionType": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "Type",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "PowerDisplay": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ActualType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "GlobalStringBaseTag",
+    "type": "string"
+   },
+   {
+    "name": "Red",
+    "type": "int",
+    "size": 8,
+    "signed": true
+   },
+   {
+    "name": "Green",
+    "type": "int",
+    "size": 8,
+    "signed": true
+   },
+   {
+    "name": "Blue",
+    "type": "int",
+    "size": 8,
+    "signed": true
+   }
+  ],
+  "QuestFactionReward": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Difficulty",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 10
+   }
+  ],
+  "QuestInfo": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "InfoName_lang",
+    "type": "locstring"
+   }
+  ],
+  "QuestSort": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SortName_lang",
+    "type": "locstring"
+   }
+  ],
+  "QuestXP": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Difficulty",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 10
+   }
+  ],
+  "RandPropPoints": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Epic",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 5
+   },
+   {
+    "name": "Superior",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 5
+   },
+   {
+    "name": "Good",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 5
+   }
+  ],
+  "Resistances": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "FizzleSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundKit::ID"
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "ScalingStatDistribution": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "StatID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 10
+   },
+   {
+    "name": "Bonus",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 10
+   },
+   {
+    "name": "Maxlevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "ScalingStatValues": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Charlevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ShoulderBudget",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TrinketBudget",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "WeaponBudget1H",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RangedBudget",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ClothShoulderArmor",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "LeatherShoulderArmor",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MailShoulderArmor",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "PlateShoulderArmor",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "WeaponDPS1H",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "WeaponDPS2H",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SpellcasterDPS1H",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SpellcasterDPS2H",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RangedDPS",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "WandDPS",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SpellPower",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "PrimaryBudget",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TertiaryBudget",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ClothCloakArmor",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ClothChestArmor",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "LeatherChestArmor",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MailChestArmor",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "PlateChestArmor",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "ScreenEffect": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "Effect",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Param",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   },
+   {
+    "name": "LightParamsID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "LightParams::ID"
+   },
+   {
+    "name": "SoundAmbienceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundAmbience::ID"
+   },
+   {
+    "name": "ZoneMusicID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ZoneMusic::ID"
+   }
+  ],
+  "ServerMessages": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Text_lang",
+    "type": "locstring"
+   }
+  ],
+  "SheatheSoundLookups": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ClassID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ItemSubClass::ClassID"
+   },
+   {
+    "name": "SubclassID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ItemSubClass::SubClassID"
+   },
+   {
+    "name": "Material",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Material::ID"
+   },
+   {
+    "name": "CheckMaterial",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SheatheSound",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "UnsheatheSound",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SkillCostsData": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SkillCostsID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Cost",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   }
+  ],
+  "SkillLine": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "CategoryID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SkillLineCategory::ID"
+   },
+   {
+    "name": "SkillCostsID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DisplayName_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Description_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "SpellIconID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellIcon::ID"
+   },
+   {
+    "name": "AlternateVerb_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "CanLink",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SkillLineAbility": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SkillLine",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SkillLine::ID"
+   },
+   {
+    "name": "Spell",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Spell::ID"
+   },
+   {
+    "name": "RaceMask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ClassMask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ExcludeRace",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ExcludeClass",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MinSkillLineRank",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SupercededBySpell",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Spell::ID"
+   },
+   {
+    "name": "AcquireMethod",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TrivialSkillLineRankHigh",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TrivialSkillLineRankLow",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CharacterPoints",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2
+   }
+  ],
+  "SkillLineCategory": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "SortIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SkillRaceClassInfo": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SkillID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SkillLine::ID"
+   },
+   {
+    "name": "RaceMask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ClassMask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MinLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SkillTierID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SkillTiers::ID"
+   },
+   {
+    "name": "SkillCostIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SkillTiers": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Cost",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 16
+   },
+   {
+    "name": "Value",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 16
+   }
+  ],
+  "SoundAmbience": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "AmbienceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2,
+    "fk": "SoundKit::ID"
+   }
+  ],
+  "SoundEmitters": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Position",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "Direction",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "SoundEntryAdvancedID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntriesAdvanced::ID"
+   },
+   {
+    "name": "MapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   }
+  ],
+  "SoundEntries": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SoundType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "File",
+    "type": "string",
+    "array": 10
+   },
+   {
+    "name": "Freq",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 10
+   },
+   {
+    "name": "DirectoryBase",
+    "type": "string"
+   },
+   {
+    "name": "VolumeFloat",
+    "type": "float"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MinDistance",
+    "type": "float"
+   },
+   {
+    "name": "DistanceCutoff",
+    "type": "float"
+   },
+   {
+    "name": "EAXDef",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundEntriesAdvancedID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntriesAdvanced::ID"
+   }
+  ],
+  "SoundEntriesAdvanced": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SoundEntryID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "InnerRadius2D",
+    "type": "float"
+   },
+   {
+    "name": "TimeA",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TimeB",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TimeC",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TimeD",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RandomOffsetRange",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Usage",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TimeIntervalMin",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TimeIntervalMax",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "VolumeSliderCategory",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DuckToSFX",
+    "type": "float"
+   },
+   {
+    "name": "DuckToMusic",
+    "type": "float"
+   },
+   {
+    "name": "DuckToAmbience",
+    "type": "float"
+   },
+   {
+    "name": "InnerRadiusOfInfluence",
+    "type": "float"
+   },
+   {
+    "name": "OuterRadiusOfInfluence",
+    "type": "float"
+   },
+   {
+    "name": "TimeToDuck",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TimeToUnduck",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "InsideAngle",
+    "type": "float"
+   },
+   {
+    "name": "OutsideAngle",
+    "type": "float"
+   },
+   {
+    "name": "OutsideVolume",
+    "type": "float"
+   },
+   {
+    "name": "OuterRadius2D",
+    "type": "float"
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   }
+  ],
+  "SoundFilter": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   }
+  ],
+  "SoundFilterElem": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SoundFilterID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundFilter::ID"
+   },
+   {
+    "name": "OrderIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "FilterType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Params",
+    "type": "float",
+    "array": 9
+   }
+  ],
+  "SoundProviderPreferences": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Description",
+    "type": "string"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EAXEnvironmentSelection",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EAXDecayTime",
+    "type": "float"
+   },
+   {
+    "name": "EAX2EnvironmentSize",
+    "type": "float"
+   },
+   {
+    "name": "EAX2EnvironmentDiffusion",
+    "type": "float"
+   },
+   {
+    "name": "EAX2Room",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EAX2RoomHF",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EAX2DecayHFRatio",
+    "type": "float"
+   },
+   {
+    "name": "EAX2Reflections",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EAX2ReflectionsDelay",
+    "type": "float"
+   },
+   {
+    "name": "EAX2Reverb",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EAX2ReverbDelay",
+    "type": "float"
+   },
+   {
+    "name": "EAX2RoomRolloff",
+    "type": "float"
+   },
+   {
+    "name": "EAX2AirAbsorption",
+    "type": "float"
+   },
+   {
+    "name": "EAX3RoomLF",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EAX3DecayLFRatio",
+    "type": "float"
+   },
+   {
+    "name": "EAX3EchoTime",
+    "type": "float"
+   },
+   {
+    "name": "EAX3EchoDepth",
+    "type": "float"
+   },
+   {
+    "name": "EAX3ModulationTime",
+    "type": "float"
+   },
+   {
+    "name": "EAX3ModulationDepth",
+    "type": "float"
+   },
+   {
+    "name": "EAX3HFReference",
+    "type": "float"
+   },
+   {
+    "name": "EAX3LFReference",
+    "type": "float"
+   }
+  ],
+  "SoundSamplePreferences": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Field_0_6_0_3592_001",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_0_6_0_3592_002",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EAX2SampleRoom",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_0_6_0_3592_004",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_0_6_0_3592_005",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_0_6_0_3592_006",
+    "type": "float"
+   },
+   {
+    "name": "Field_0_6_0_3592_007",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EAX2SampleOcclusionLFRatio",
+    "type": "float"
+   },
+   {
+    "name": "EAX2SampleOcclusionRoomRatio",
+    "type": "float"
+   },
+   {
+    "name": "Field_0_6_0_3592_010",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EAX1EffectLevel",
+    "type": "float"
+   },
+   {
+    "name": "Field_0_6_0_3592_012",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_0_6_0_3592_013",
+    "type": "float"
+   },
+   {
+    "name": "EAX3SampleExclusion",
+    "type": "float"
+   },
+   {
+    "name": "Field_0_6_0_3592_015",
+    "type": "float"
+   },
+   {
+    "name": "Field_0_6_0_3592_016",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SoundWaterType": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SoundType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundSubtype",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   }
+  ],
+  "SpamMessages": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Text",
+    "type": "string"
+   }
+  ],
+  "Spell": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Category",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellCategory::ID"
+   },
+   {
+    "name": "DispelType",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellDispelType::ID"
+   },
+   {
+    "name": "Mechanic",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellMechanic::ID"
+   },
+   {
+    "name": "Attributes",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AttributesEx",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AttributesExB",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AttributesExC",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AttributesExD",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AttributesExE",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AttributesExF",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AttributesExG",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ShapeshiftMask",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2
+   },
+   {
+    "name": "ShapeshiftExclude",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2
+   },
+   {
+    "name": "Targets",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TargetCreatureType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RequiresSpellFocus",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellFocusObject::ID"
+   },
+   {
+    "name": "FacingCasterFlags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CasterAuraState",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TargetAuraState",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ExcludeCasterAuraState",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ExcludeTargetAuraState",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CasterAuraSpell",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TargetAuraSpell",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ExcludeCasterAuraSpell",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ExcludeTargetAuraSpell",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CastingTimeIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellCastTimes::ID"
+   },
+   {
+    "name": "RecoveryTime",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CategoryRecoveryTime",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "InterruptFlags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AuraInterruptFlags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ChannelInterruptFlags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ProcTypeMask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ProcChance",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ProcCharges",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MaxLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "BaseLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SpellLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DurationIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellDuration::ID"
+   },
+   {
+    "name": "PowerType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ManaCost",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ManaCostPerLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ManaPerSecond",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ManaPerSecondPerLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RangeIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Speed",
+    "type": "float"
+   },
+   {
+    "name": "ModalNextSpell",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CumulativeAura",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Totem",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2
+   },
+   {
+    "name": "Reagent",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8,
+    "fk": "Item::ID"
+   },
+   {
+    "name": "ReagentCount",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8
+   },
+   {
+    "name": "EquippedItemClass",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EquippedItemSubclass",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EquippedItemInvTypes",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Effect",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectDieSides",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectRealPointsPerLevel",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "EffectBasePoints",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectMechanic",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3,
+    "fk": "SpellMechanic::ID"
+   },
+   {
+    "name": "ImplicitTargetA",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "ImplicitTargetB",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectRadiusIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3,
+    "fk": "SpellRadius::ID"
+   },
+   {
+    "name": "EffectAura",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectAuraPeriod",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectAmplitude",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "EffectChainTargets",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectItemType",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectMiscValue",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectMiscValueB",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectTriggerSpell",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3,
+    "fk": "Spell::ID"
+   },
+   {
+    "name": "EffectPointsPerCombo",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "EffectSpellClassMaskA",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectSpellClassMaskB",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectSpellClassMaskC",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "SpellVisualID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2,
+    "fk": "SpellVisual::ID"
+   },
+   {
+    "name": "SpellIconID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellIcon::ID"
+   },
+   {
+    "name": "ActiveIconID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellIcon::ID"
+   },
+   {
+    "name": "SpellPriority",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "NameSubtext_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Description_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "AuraDescription_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "ManaCostPct",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "StartRecoveryCategory",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "StartRecoveryTime",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MaxTargetLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SpellClassSet",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SpellClassMask",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "MaxTargets",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DefenseType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "PreventionType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "StanceBarOrder",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EffectChainAmplitude",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "MinFactionID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Faction::ID"
+   },
+   {
+    "name": "MinReputation",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RequiredAuraVision",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RequiredTotemCategoryID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2,
+    "fk": "TotemCategory::ID"
+   },
+   {
+    "name": "RequiredAreasID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AreaGroup::ID"
+   },
+   {
+    "name": "SchoolMask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RuneCostID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellRuneCost::ID"
+   },
+   {
+    "name": "SpellMissileID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellMissile::ID"
+   },
+   {
+    "name": "PowerDisplayID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "PowerDisplay::ID"
+   },
+   {
+    "name": "EffectBonusCoefficient",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "DescriptionVariablesID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellDescriptionVariables::ID"
+   },
+   {
+    "name": "Difficulty",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SpellCastTimes": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Base",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "PerLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Minimum",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SpellCategory": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SpellChainEffects": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "AvgSegLen",
+    "type": "float"
+   },
+   {
+    "name": "Width",
+    "type": "float"
+   },
+   {
+    "name": "NoiseScale",
+    "type": "float"
+   },
+   {
+    "name": "TexCoordScale",
+    "type": "float"
+   },
+   {
+    "name": "SegDuration",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SegDelay",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Texture",
+    "type": "string"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "JointCount",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "JointOffsetRadius",
+    "type": "float"
+   },
+   {
+    "name": "JointsPerMinorJoint",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MinorJointsPerMajorJoint",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MinorJointScale",
+    "type": "float"
+   },
+   {
+    "name": "MajorJointScale",
+    "type": "float"
+   },
+   {
+    "name": "JointMoveSpeed",
+    "type": "float"
+   },
+   {
+    "name": "JointSmoothness",
+    "type": "float"
+   },
+   {
+    "name": "MinDurationBetweenJointJumps",
+    "type": "float"
+   },
+   {
+    "name": "MaxDurationBetweenJointJumps",
+    "type": "float"
+   },
+   {
+    "name": "WaveHeight",
+    "type": "float"
+   },
+   {
+    "name": "WaveFreq",
+    "type": "float"
+   },
+   {
+    "name": "WaveSpeed",
+    "type": "float"
+   },
+   {
+    "name": "MinWaveAngle",
+    "type": "float"
+   },
+   {
+    "name": "MaxWaveAngle",
+    "type": "float"
+   },
+   {
+    "name": "MinWaveSpin",
+    "type": "float"
+   },
+   {
+    "name": "MaxWaveSpin",
+    "type": "float"
+   },
+   {
+    "name": "ArcHeight",
+    "type": "float"
+   },
+   {
+    "name": "MinArcAngle",
+    "type": "float"
+   },
+   {
+    "name": "MaxArcAngle",
+    "type": "float"
+   },
+   {
+    "name": "MinArcSpin",
+    "type": "float"
+   },
+   {
+    "name": "MaxArcSpin",
+    "type": "float"
+   },
+   {
+    "name": "DelayBetweenEffects",
+    "type": "float"
+   },
+   {
+    "name": "MinFlickerOnDuration",
+    "type": "float"
+   },
+   {
+    "name": "MaxFlickerOnDuration",
+    "type": "float"
+   },
+   {
+    "name": "MinFlickerOffDuration",
+    "type": "float"
+   },
+   {
+    "name": "MaxFlickerOffDuration",
+    "type": "float"
+   },
+   {
+    "name": "PulseSpeed",
+    "type": "float"
+   },
+   {
+    "name": "PulseOnLength",
+    "type": "float"
+   },
+   {
+    "name": "PulseFadeLength",
+    "type": "float"
+   },
+   {
+    "name": "Alpha",
+    "type": "int",
+    "size": 8,
+    "signed": true
+   },
+   {
+    "name": "Red",
+    "type": "int",
+    "size": 8,
+    "signed": true
+   },
+   {
+    "name": "Green",
+    "type": "int",
+    "size": 8,
+    "signed": true
+   },
+   {
+    "name": "Blue",
+    "type": "int",
+    "size": 8,
+    "signed": true
+   },
+   {
+    "name": "BlendMode",
+    "type": "int",
+    "size": 8,
+    "signed": true
+   },
+   {
+    "name": "Combo",
+    "type": "string"
+   },
+   {
+    "name": "RenderLayer",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TextureLength",
+    "type": "float"
+   },
+   {
+    "name": "WavePhase",
+    "type": "float"
+   }
+  ],
+  "SpellDescriptionVariables": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Variables",
+    "type": "string"
+   }
+  ],
+  "SpellDifficulty": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "DifficultySpellID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4,
+    "fk": "Spell::ID"
+   }
+  ],
+  "SpellDispelType": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Mask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ImmunityPossible",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "InternalName",
+    "type": "string"
+   }
+  ],
+  "SpellDuration": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Duration",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DurationPerLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MaxDuration",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SpellEffectCameraShakes": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "CameraShake",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   }
+  ],
+  "SpellFocusObject": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   }
+  ],
+  "SpellIcon": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "TextureFilename",
+    "type": "string"
+   }
+  ],
+  "SpellItemEnchantment": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Charges",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Effect",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectPointsMin",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectPointsMax",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "EffectArg",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3,
+    "fk": "Spell::ID"
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "ItemVisual",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ItemVisuals::ID"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Src_itemID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Condition_ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellItemEnchantmentCondition::ID"
+   },
+   {
+    "name": "RequiredSkillID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SkillLine::ID"
+   },
+   {
+    "name": "RequiredSkillRank",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MinLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SpellItemEnchantmentCondition": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Lt_operandType",
+    "type": "int",
+    "size": 8,
+    "signed": true,
+    "array": 5
+   },
+   {
+    "name": "Lt_operand",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 5
+   },
+   {
+    "name": "Operator",
+    "type": "int",
+    "size": 8,
+    "signed": true,
+    "array": 5
+   },
+   {
+    "name": "Rt_operandType",
+    "type": "int",
+    "size": 8,
+    "signed": true,
+    "array": 5
+   },
+   {
+    "name": "Rt_operand",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 5
+   },
+   {
+    "name": "Logic",
+    "type": "int",
+    "size": 8,
+    "signed": true,
+    "array": 5
+   }
+  ],
+  "SpellMechanic": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "StateName_lang",
+    "type": "locstring"
+   }
+  ],
+  "SpellMissile": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DefaultPitchMin",
+    "type": "float"
+   },
+   {
+    "name": "DefaultPitchMax",
+    "type": "float"
+   },
+   {
+    "name": "DefaultSpeedMin",
+    "type": "float"
+   },
+   {
+    "name": "DefaultSpeedMax",
+    "type": "float"
+   },
+   {
+    "name": "RandomizeFacingMin",
+    "type": "float"
+   },
+   {
+    "name": "RandomizeFacingMax",
+    "type": "float"
+   },
+   {
+    "name": "RandomizePitchMin",
+    "type": "float"
+   },
+   {
+    "name": "RandomizePitchMax",
+    "type": "float"
+   },
+   {
+    "name": "RandomizeSpeedMin",
+    "type": "float"
+   },
+   {
+    "name": "RandomizeSpeedMax",
+    "type": "float"
+   },
+   {
+    "name": "Gravity",
+    "type": "float"
+   },
+   {
+    "name": "MaxDuration",
+    "type": "float"
+   },
+   {
+    "name": "CollisionRadius",
+    "type": "float"
+   }
+  ],
+  "SpellMissileMotion": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "ScriptBody",
+    "type": "string"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MissileCount",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SpellRadius": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Radius",
+    "type": "float"
+   },
+   {
+    "name": "RadiusPerLevel",
+    "type": "float"
+   },
+   {
+    "name": "RadiusMax",
+    "type": "float"
+   }
+  ],
+  "SpellRange": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "RangeMin",
+    "type": "float",
+    "array": 2
+   },
+   {
+    "name": "RangeMax",
+    "type": "float",
+    "array": 2
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DisplayName_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "DisplayNameShort_lang",
+    "type": "locstring"
+   }
+  ],
+  "SpellRuneCost": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Blood",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Unholy",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Frost",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RunicPower",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SpellShapeshiftForm": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "BonusActionBar",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CreatureType",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "CreatureType::ID"
+   },
+   {
+    "name": "AttackIconID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellIcon::ID"
+   },
+   {
+    "name": "CombatRoundTime",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CreatureDisplayID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4,
+    "fk": "CreatureDisplayInfo::ID"
+   },
+   {
+    "name": "PresetSpellID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8,
+    "fk": "Spell::ID"
+   }
+  ],
+  "SpellVisual": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "PrecastKit",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   },
+   {
+    "name": "CastKit",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   },
+   {
+    "name": "ImpactKit",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   },
+   {
+    "name": "StateKit",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   },
+   {
+    "name": "StateDoneKit",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   },
+   {
+    "name": "ChannelKit",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   },
+   {
+    "name": "HasMissile",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MissileModel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MissilePathType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MissileDestinationAttachment",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MissileSound",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AnimEventSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CasterImpactKit",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   },
+   {
+    "name": "TargetImpactKit",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   },
+   {
+    "name": "MissileAttachment",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MissileFollowGroundHeight",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MissileFollowGroundDropSpeed",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MissileFollowGroundApproach",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MissileFollowGroundFlags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MissileMotion",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MissileTargetingKit",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   },
+   {
+    "name": "InstantAreaKit",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   },
+   {
+    "name": "ImpactAreaKit",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   },
+   {
+    "name": "PersistentAreaKit",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   },
+   {
+    "name": "MissileCastOffset",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "MissileImpactOffset",
+    "type": "float",
+    "array": 3
+   }
+  ],
+  "SpellVisualEffectName": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "FileName",
+    "type": "string"
+   },
+   {
+    "name": "AreaEffectSize",
+    "type": "float"
+   },
+   {
+    "name": "Scale",
+    "type": "float"
+   },
+   {
+    "name": "MinAllowedScale",
+    "type": "float"
+   },
+   {
+    "name": "MaxAllowedScale",
+    "type": "float"
+   }
+  ],
+  "SpellVisualKit": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "StartAnimID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AnimationData::ID"
+   },
+   {
+    "name": "AnimID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AnimationData::ID"
+   },
+   {
+    "name": "HeadEffect",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ChestEffect",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "BaseEffect",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "LeftHandEffect",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RightHandEffect",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "BreathEffect",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "LeftWeaponEffect",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RightWeaponEffect",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SpecialEffect",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "WorldEffect",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "ShakeID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellEffectCameraShakes::ID"
+   },
+   {
+    "name": "CharProc",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4
+   },
+   {
+    "name": "CharParamZero",
+    "type": "float",
+    "array": 4
+   },
+   {
+    "name": "CharParamOne",
+    "type": "float",
+    "array": 4
+   },
+   {
+    "name": "CharParamTwo",
+    "type": "float",
+    "array": 4
+   },
+   {
+    "name": "CharParamThree",
+    "type": "float",
+    "array": 4
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SpellVisualKitAreaModel": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "EnumID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "SpellVisualKitModelAttach": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ParentSpellVisualKitID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualKit::ID"
+   },
+   {
+    "name": "SpellVisualEffectNameID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellVisualEffectName::ID"
+   },
+   {
+    "name": "AttachmentID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Offset",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "Yaw",
+    "type": "float"
+   },
+   {
+    "name": "Pitch",
+    "type": "float"
+   },
+   {
+    "name": "Roll",
+    "type": "float"
+   }
+  ],
+  "SpellVisualPrecastTransitions": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "PrecastLoadAnimName",
+    "type": "string"
+   },
+   {
+    "name": "PrecastHoldAnimName",
+    "type": "string"
+   }
+  ],
+  "StableSlotPrices": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Cost",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "Startup_Strings": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "Message_lang",
+    "type": "locstring"
+   }
+  ],
+  "Stationery": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ItemID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Item::ID"
+   },
+   {
+    "name": "Texture",
+    "type": "string"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "StringLookups": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "String",
+    "type": "string"
+   }
+  ],
+  "SummonProperties": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Control",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Faction",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "FactionTemplate::ID"
+   },
+   {
+    "name": "Title",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Slot",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "Talent": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "TabID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "TalentTab::ID"
+   },
+   {
+    "name": "TierID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ColumnIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SpellRank",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 9,
+    "fk": "Spell::ID"
+   },
+   {
+    "name": "PrereqTalent",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3,
+    "fk": "Talent::ID"
+   },
+   {
+    "name": "PrereqRank",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RequiredSpellID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Spell::ID"
+   },
+   {
+    "name": "CategoryMask",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2
+   }
+  ],
+  "TalentTab": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "SpellIconID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SpellIcon::ID"
+   },
+   {
+    "name": "RaceMask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ClassMask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "CategoryEnumID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "OrderIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "BackgroundFile",
+    "type": "string"
+   }
+  ],
+  "TaxiNodes": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ContinentID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "Pos",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "MountCreatureID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2,
+    "fk": "Creature::ID"
+   }
+  ],
+  "TaxiPath": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "FromTaxiNode",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "TaxiNodes::ID"
+   },
+   {
+    "name": "ToTaxiNode",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "TaxiNodes::ID"
+   },
+   {
+    "name": "Cost",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "TaxiPathNode": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "PathID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "TaxiPath::ID"
+   },
+   {
+    "name": "NodeIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ContinentID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "Loc",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Delay",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ArrivalEventID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DepartureEventID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "TeamContributionPoints": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ],
+  "TerrainType": [
+   {
+    "name": "TerrainID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TerrainDesc",
+    "type": "string"
+   },
+   {
+    "name": "FootstepSprayRun",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "FootstepSprayWalk",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "TerrainTypeSounds::ID"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "TerrainTypeSounds": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   }
+  ],
+  "TotemCategory": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "TotemCategoryType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TotemCategoryMask",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "TransportAnimation": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "TransportID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TimeIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Pos",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "SequenceID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "TransportPhysics": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "WaveAmp",
+    "type": "float"
+   },
+   {
+    "name": "WaveTimeScale",
+    "type": "float"
+   },
+   {
+    "name": "RollAmp",
+    "type": "float"
+   },
+   {
+    "name": "RollTimeScale",
+    "type": "float"
+   },
+   {
+    "name": "PitchAmp",
+    "type": "float"
+   },
+   {
+    "name": "PitchTimeScale",
+    "type": "float"
+   },
+   {
+    "name": "MaxBank",
+    "type": "float"
+   },
+   {
+    "name": "MaxBankTurnSpeed",
+    "type": "float"
+   },
+   {
+    "name": "SpeedDampThresh",
+    "type": "float"
+   },
+   {
+    "name": "SpeedDamp",
+    "type": "float"
+   }
+  ],
+  "TransportRotation": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "GameObjectsID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "GameObjects::ID"
+   },
+   {
+    "name": "TimeIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Rot",
+    "type": "float",
+    "array": 4
+   }
+  ],
+  "UISoundLookups": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "SoundName",
+    "type": "string"
+   }
+  ],
+  "UnitBlood": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "CombatBloodSpurtFront",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2
+   },
+   {
+    "name": "CombatBloodSpurtBack",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2
+   },
+   {
+    "name": "GroundBlood",
+    "type": "string",
+    "array": 5
+   }
+  ],
+  "UnitBloodLevels": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Violencelevel",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   }
+  ],
+  "Vehicle": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TurnSpeed",
+    "type": "float"
+   },
+   {
+    "name": "PitchSpeed",
+    "type": "float"
+   },
+   {
+    "name": "PitchMin",
+    "type": "float"
+   },
+   {
+    "name": "PitchMax",
+    "type": "float"
+   },
+   {
+    "name": "SeatID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 8,
+    "fk": "VehicleSeat::ID"
+   },
+   {
+    "name": "MouseLookOffsetPitch",
+    "type": "float"
+   },
+   {
+    "name": "CameraFadeDistScalarMin",
+    "type": "float"
+   },
+   {
+    "name": "CameraFadeDistScalarMax",
+    "type": "float"
+   },
+   {
+    "name": "CameraPitchOffset",
+    "type": "float"
+   },
+   {
+    "name": "FacingLimitRight",
+    "type": "float"
+   },
+   {
+    "name": "FacingLimitLeft",
+    "type": "float"
+   },
+   {
+    "name": "MsslTrgtTurnLingering",
+    "type": "float"
+   },
+   {
+    "name": "MsslTrgtPitchLingering",
+    "type": "float"
+   },
+   {
+    "name": "MsslTrgtMouseLingering",
+    "type": "float"
+   },
+   {
+    "name": "MsslTrgtEndOpacity",
+    "type": "float"
+   },
+   {
+    "name": "MsslTrgtArcSpeed",
+    "type": "float"
+   },
+   {
+    "name": "MsslTrgtArcRepeat",
+    "type": "float"
+   },
+   {
+    "name": "MsslTrgtArcWidth",
+    "type": "float"
+   },
+   {
+    "name": "MsslTrgtImpactRadius",
+    "type": "float",
+    "array": 2
+   },
+   {
+    "name": "MsslTrgtArcTexture",
+    "type": "string"
+   },
+   {
+    "name": "MsslTrgtImpactTexture",
+    "type": "string"
+   },
+   {
+    "name": "MsslTrgtImpactModel",
+    "type": "string",
+    "array": 2
+   },
+   {
+    "name": "CameraYawOffset",
+    "type": "float"
+   },
+   {
+    "name": "UiLocomotionType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MsslTrgtImpactTexRadius",
+    "type": "float"
+   },
+   {
+    "name": "VehicleUIIndicatorID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "VehicleUIIndicator::ID"
+   },
+   {
+    "name": "PowerDisplayID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3,
+    "fk": "PowerDisplay::ID"
+   }
+  ],
+  "VehicleSeat": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Field_3_3_5_12213_001",
+    "type": "float"
+   },
+   {
+    "name": "AttachmentID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AttachmentOffset",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "Field_3_3_5_12213_004",
+    "type": "float"
+   },
+   {
+    "name": "EnterSpeed",
+    "type": "float"
+   },
+   {
+    "name": "EnterGravity",
+    "type": "float"
+   },
+   {
+    "name": "EnterMinDuration",
+    "type": "float"
+   },
+   {
+    "name": "EnterMaxDuration",
+    "type": "float"
+   },
+   {
+    "name": "EnterMinArcHeight",
+    "type": "float"
+   },
+   {
+    "name": "EnterMaxArcHeight",
+    "type": "float"
+   },
+   {
+    "name": "EnterAnimStart",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EnterAnimLoop",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RideAnimStart",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RideAnimLoop",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RideUpperAnimStart",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RideUpperAnimLoop",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_3_3_5_12213_017",
+    "type": "float"
+   },
+   {
+    "name": "ExitSpeed",
+    "type": "float"
+   },
+   {
+    "name": "ExitGravity",
+    "type": "float"
+   },
+   {
+    "name": "ExitMinDuration",
+    "type": "float"
+   },
+   {
+    "name": "ExitMaxDuration",
+    "type": "float"
+   },
+   {
+    "name": "ExitMinArcHeight",
+    "type": "float"
+   },
+   {
+    "name": "ExitMaxArcHeight",
+    "type": "float"
+   },
+   {
+    "name": "ExitAnimStart",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ExitAnimLoop",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ExitAnimEnd",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_3_3_5_12213_027",
+    "type": "float"
+   },
+   {
+    "name": "PassengerPitch",
+    "type": "float"
+   },
+   {
+    "name": "Field_3_3_5_12213_029",
+    "type": "float"
+   },
+   {
+    "name": "PassengerAttachmentID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "VehicleEnterAnim",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "VehicleExitAnim",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "VehicleRideAnimLoop",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_3_3_5_12213_034",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "VehicleExitAnimBone",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "VehicleEnterAnimBone",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_3_3_5_12213_037",
+    "type": "float"
+   },
+   {
+    "name": "Field_3_3_5_12213_038",
+    "type": "float"
+   },
+   {
+    "name": "VehicleAbilityDisplay",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "EnterUISoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "Field_3_3_5_12213_041",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "UiSkin",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_3_3_5_12213_043",
+    "type": "float"
+   },
+   {
+    "name": "Field_3_3_5_12213_044",
+    "type": "float"
+   },
+   {
+    "name": "Field_3_3_5_12213_045",
+    "type": "float"
+   },
+   {
+    "name": "Field_3_3_5_12213_046",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Field_3_3_5_12213_047",
+    "type": "float"
+   },
+   {
+    "name": "Field_3_3_5_12213_048",
+    "type": "float"
+   },
+   {
+    "name": "Field_3_3_5_12213_049",
+    "type": "float"
+   },
+   {
+    "name": "Field_3_3_5_12213_050",
+    "type": "float"
+   },
+   {
+    "name": "Field_3_3_5_12213_051",
+    "type": "float"
+   },
+   {
+    "name": "Field_3_3_5_12213_052",
+    "type": "float"
+   },
+   {
+    "name": "Field_3_3_5_12213_053",
+    "type": "float"
+   },
+   {
+    "name": "Field_3_3_5_12213_054",
+    "type": "float"
+   },
+   {
+    "name": "Field_3_3_5_12213_055",
+    "type": "float"
+   }
+  ],
+  "VehicleUIIndSeat": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "VehicleUIIndicatorID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "VehicleUIIndicator::ID"
+   },
+   {
+    "name": "VirtualSeatIndex",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "XPos",
+    "type": "float"
+   },
+   {
+    "name": "YPos",
+    "type": "float"
+   }
+  ],
+  "VehicleUIIndicator": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "BackgroundTexture",
+    "type": "string"
+   }
+  ],
+  "VideoHardware": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "VendorID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DeviceID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "FarclipIdx",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TerrainLODDistIdx",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TerrainShadowLOD",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DetailDoodadDensityIdx",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DetailDoodadAlpha",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AnimatingDoodadIdx",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Trilinear",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "NumLights",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Specularity",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "WaterLODIdx",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ParticleDensityIdx",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "UnitDrawDistIdx",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SmallCullDistIdx",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ResolutionIdx",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "BaseMipLevel",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "OglOverrides",
+    "type": "string"
+   },
+   {
+    "name": "D3dOverrides",
+    "type": "string"
+   },
+   {
+    "name": "FixLag",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Multisample",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Atlasdisable",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "VocalUISounds": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "VocalUIEnum",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RaceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ChrRaces::ID"
+   },
+   {
+    "name": "NormalSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2,
+    "fk": "SoundKit::ID"
+   },
+   {
+    "name": "PissedSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2,
+    "fk": "SoundKit::ID"
+   }
+  ],
+  "WMOAreaTable": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "WMOID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "NameSetID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "WMOGroupID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundProviderPref",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundProviderPreferences::ID"
+   },
+   {
+    "name": "SoundProviderPrefUnderwater",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundProviderPreferences::ID"
+   },
+   {
+    "name": "AmbienceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundAmbience::ID"
+   },
+   {
+    "name": "ZoneMusic",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ZoneMusic::ID"
+   },
+   {
+    "name": "IntroSound",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ZoneIntroMusicTable::ID"
+   },
+   {
+    "name": "Flags",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AreaTableID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AreaTable::ID"
+   },
+   {
+    "name": "AreaName_lang",
+    "type": "locstring"
+   }
+  ],
+  "WeaponImpactSounds": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "WeaponSubClassID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ParrySoundType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ImpactSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 10,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "CritImpactSoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 10,
+    "fk": "SoundEntries::ID"
+   }
+  ],
+  "WeaponSwingSounds2": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SwingType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Crit",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   }
+  ],
+  "Weather": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "AmbienceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "EffectType",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TransitionSkyBox",
+    "type": "float"
+   },
+   {
+    "name": "EffectColor",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "EffectTexture",
+    "type": "string"
+   }
+  ],
+  "WorldChunkSounds": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "ChunkX",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ChunkY",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SubchunkX",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "SubchunkY",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ZoneIntroMusicID",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ZoneMusicID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ZoneMusic::ID"
+   },
+   {
+    "name": "SoundAmbienceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundAmbience::ID"
+   },
+   {
+    "name": "SoundProviderPreferencesID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundProviderPreferences::ID"
+   }
+  ],
+  "WorldMapArea": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "AreaID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AreaTable::ID"
+   },
+   {
+    "name": "AreaName",
+    "type": "string"
+   },
+   {
+    "name": "LocLeft",
+    "type": "float"
+   },
+   {
+    "name": "LocRight",
+    "type": "float"
+   },
+   {
+    "name": "LocTop",
+    "type": "float"
+   },
+   {
+    "name": "LocBottom",
+    "type": "float"
+   },
+   {
+    "name": "DisplayMapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "DefaultDungeonFloor",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ParentWorldMapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "WorldMapArea::ID"
+   }
+  ],
+  "WorldMapContinent": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "LeftBoundary",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "RightBoundary",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TopBoundary",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "BottomBoundary",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "ContinentOffset",
+    "type": "float",
+    "array": 2
+   },
+   {
+    "name": "Scale",
+    "type": "float"
+   },
+   {
+    "name": "TaxiMin",
+    "type": "float",
+    "array": 2
+   },
+   {
+    "name": "TaxiMax",
+    "type": "float",
+    "array": 2
+   },
+   {
+    "name": "WorldMapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "WorldMapArea::ID"
+   }
+  ],
+  "WorldMapOverlay": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MapAreaID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "WorldMapArea::ID"
+   },
+   {
+    "name": "AreaID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 4,
+    "fk": "AreaTable::ID"
+   },
+   {
+    "name": "MapPointX",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MapPointY",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TextureName",
+    "type": "string"
+   },
+   {
+    "name": "TextureWidth",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "TextureHeight",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "OffsetX",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "OffsetY",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "HitRectTop",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "HitRectLeft",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "HitRectBottom",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "HitRectRight",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "WorldMapTransforms": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "RegionMin",
+    "type": "float",
+    "array": 2
+   },
+   {
+    "name": "RegionMax",
+    "type": "float",
+    "array": 2
+   },
+   {
+    "name": "NewMapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "RegionOffset",
+    "type": "float",
+    "array": 2
+   },
+   {
+    "name": "NewDungeonMapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "DungeonMap::ID"
+   }
+  ],
+  "WorldSafeLocs": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Continent",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "Loc",
+    "type": "float",
+    "array": 3
+   },
+   {
+    "name": "AreaName_lang",
+    "type": "locstring"
+   }
+  ],
+  "WorldStateUI": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "MapID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "Map::ID"
+   },
+   {
+    "name": "AreaID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AreaTable::ID"
+   },
+   {
+    "name": "PhaseShift",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Icon",
+    "type": "string"
+   },
+   {
+    "name": "String_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "Tooltip_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "StateVariable",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "Type",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "DynamicIcon",
+    "type": "string"
+   },
+   {
+    "name": "DynamicTooltip_lang",
+    "type": "locstring"
+   },
+   {
+    "name": "ExtendedUI",
+    "type": "string"
+   },
+   {
+    "name": "ExtendedUIStateVariable",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 3
+   }
+  ],
+  "WorldStateZoneSounds": [
+   {
+    "name": "WorldStateID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "WorldState::ID"
+   },
+   {
+    "name": "WorldStateValue",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "AreaID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "AreaTable::ID"
+   },
+   {
+    "name": "WMOAreaID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "WMOAreaTable::ID"
+   },
+   {
+    "name": "ZoneIntroMusicID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ZoneIntroMusicTable::ID"
+   },
+   {
+    "name": "ZoneMusicID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "ZoneMusic::ID"
+   },
+   {
+    "name": "SoundAmbienceID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundAmbience::ID"
+   },
+   {
+    "name": "SoundProviderPreferencesID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundProviderPreferences::ID"
+   }
+  ],
+  "WowError_Strings": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "Description_lang",
+    "type": "locstring"
+   }
+  ],
+  "ZoneIntroMusicTable": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Name",
+    "type": "string"
+   },
+   {
+    "name": "SoundID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "fk": "SoundEntries::ID"
+   },
+   {
+    "name": "Priority",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   },
+   {
+    "name": "MinDelayMinutes",
+    "type": "int",
+    "size": 32,
+    "signed": true
+   }
+  ],
+  "ZoneMusic": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "SetName",
+    "type": "string"
+   },
+   {
+    "name": "SilenceIntervalMin",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2
+   },
+   {
+    "name": "SilenceIntervalMax",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2
+   },
+   {
+    "name": "Sounds",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "array": 2,
+    "fk": "SoundEntries::ID"
+   }
+  ],
+  "gtBarberShopCostBase": [
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ],
+  "gtChanceToMeleeCrit": [
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ],
+  "gtChanceToMeleeCritBase": [
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ],
+  "gtChanceToSpellCrit": [
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ],
+  "gtChanceToSpellCritBase": [
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ],
+  "gtCombatRatings": [
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ],
+  "gtNPCManaCostScaler": [
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ],
+  "gtOCTClassCombatRatingScalar": [
+   {
+    "name": "ID",
+    "type": "int",
+    "size": 32,
+    "signed": true,
+    "id": true
+   },
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ],
+  "gtOCTRegenHP": [
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ],
+  "gtOCTRegenMP": [
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ],
+  "gtRegenHPPerSpt": [
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ],
+  "gtRegenMPPerSpt": [
+   {
+    "name": "Data",
+    "type": "float"
+   }
+  ]
+ }
+}

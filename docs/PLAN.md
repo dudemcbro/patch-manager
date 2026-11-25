@@ -36,13 +36,14 @@ Solution `ModPatchManager.sln`:
   - `Store/` (done, M2) - MPQ/folder/zip -> store (`$MPM_STORE` or `~/.local/share/mpm/store`). `mods/<id>/manifest.json` (name, source path/kind/sha256, files with chain + sha256 + origin, warnings); contents in zlib-compressed content-addressed `blobs/`. Folder import reads MPQs (client slot order) then loose files on top; loose files are mapped by the first known stock top-level folder, so `Data/`, `MyMod/Data/` etc. prefixes are stripped; junk (READMEs) is skipped with a warning. Zip import guards against path escape and >16 GiB expansion. Re-importing identical content returns the existing mod. Removing a mod only touches the store.
   - `Client/` (done, M2) - `ClientInstall` lists locales and every patch the client loads (stock vs custom); `BaselineChain` resolves stock files from stock root + locale archives only.
   - `Classify/` - per-field tier classification: field schema tags (gameplay / cosmetic / link) maintained as data file per DBC; manifest override; reasons recorded for UI.
-  - `Merge/` - per-file-type strategies:
+  - `Dbc/` layouts (done, M3) - vendored 3.3.5.12340 extract of WoWDBDefs in `data/wowdbdefs/` (CC BY-SA 4.0, attribution there; layouts only, no game data), embedded in Mpm.Core. Every stock enUS DBC matches its layout (tested). Each file is checked against its layout at build time (field count + record size), so a client whose server changed a table's shape falls back to whole-file merge for that table instead of corrupting it. Planned: infer layouts for unmatched/custom tables per client, cached by DBC hash; detect build from Wow.exe.
+  - `Build/` (done, M3: priority merge) - `PatchBuilder`: per path, drop mod copies identical to stock; DBCs with matching layouts merge by row on ID (a mod only claims rows it changed vs stock; same row changed by two mods = conflict, later mod wins; stock rows are never deleted); ID-less tables are a row union; everything else is whole-file priority. A mod shipping one path in both chains uses the copy in the stock chain. Output placed by the stock copy's chain, new `Interface\`/`DBFilesClient\`/`Fonts\` files -> locale, else root. `BuildOutput` writes `patch-Z.MPQ`, `<loc>/patch-<loc>-Z.MPQ`, `build-report.json/.txt`.
+  - `Install/` (done, M3) - `Installer.Apply` renames patches to `<name>.mpm-off` (never deletes; also renames whatever already occupies the build's slot), installs the build archives, and writes `Data/.mpm-ledger.json` after every step. `Unapply` deletes only archives it installed whose hash still matches (else moves them to `.mpm-modified`), renames everything back, verifies hashes. CLI default: disable the client's custom patches byte-identical to a mod in the build.
+  - `Merge/` (planned, M4+) - per-file-type strategies:
     - DBC: row-level 3-way merge on ID, field diffs vs baseline, tier rules, cosmetic allow-list, override application.
     - Lua/XML/TOC: 3-way text merge vs stock; on conflict fall back to priority + report.
     - Binary assets: priority only, report.
   - `Renumber/` - detect Local new-ID clashes, allocate free IDs in a reserved range, rewrite FKs within Local mods (per WoWDBDefs relations); refuse if ID is server-referenced.
-  - `Build/` - write merged tree into output MPQ(s); conflict report (JSON + human-readable).
-  - `Install/` - rename ledger (`<client>/Data/.mpm-ledger.json`), apply/unapply, verify hashes, detect manual changes.
   - `Profiles/` - profile JSON: client path, locale, mod order, tiers, overrides.
 - `Mpm.App` - Avalonia UI: profile picker, mod list (drag reorder, tier toggle), conflict browser (row/field view, pick winner), build/apply/unapply buttons, report viewer.
 - `Mpm.Cli` - thin headless wrapper (build/apply/unapply) for testing and scripting.
@@ -51,7 +52,7 @@ Solution `ModPatchManager.sln`:
 ## Milestones
 1. MPQ read/write + DBC read/write round-trip (byte-identical on stock files).
 2. Import + store + baseline resolution.
-3. DBC merge (priority only), single output patch, rename ledger apply/unapply. -> usable MVP.
+3. DBC merge (priority only), single output patch, rename ledger apply/unapply. -> usable MVP. (done; verified on the tortoise patches: 54 DBCs merged with row sets identical to the mod's, apply/unapply restores the Data dir exactly. In-game load test still pending.)
 4. 3-way field merge, per-field classification, manifest support, cosmetic allow-list, conflict report.
 5. GUI conflict browser + saved overrides; profiles.
 6. Lua/XML text merge.
@@ -62,6 +63,8 @@ Solution `ModPatchManager.sln`:
 - Stock layout: `Interface\`, `DBFilesClient\`, `Fonts\` (and some `Sound\`) live only in the locale chain; models/textures/world only in the root chain. No stock path is in both chains (tested), so root-vs-locale priority never matters for the baseline.
 - Real mods do not follow that split (the tortoise patch-4 ships `Interface\` and `DBFilesClient\` in the root chain, and its DBCs again in patch-enUS-4). So the build must place each merged file by path, into the chain where its stock copy lives (new files: root, except `Interface\`/`DBFilesClient\`/`Fonts\` -> locale), and treat a mod's copies of one path in both chains as one contribution.
 - Still unverified: the client's order among custom slot characters (assumed ASCII: digits < letters) and root-vs-locale priority for custom patches. Only matters for describing what a user's current, unmanaged setup does; the tool's own output avoids it by using one slot.
+
+- `.mpm-off` suffix: Windows wildcard matching also checks 8.3 short names; "patch-4.MPQ.mpm-off" gets a short extension "MPM", not "MPQ", so `patch-?.MPQ` cannot match it.
 
 ## Open risks
 - MPQ write: resolved (own writer, verified by an independent reader). Still needs an in-game load test.

@@ -1,5 +1,7 @@
+using Mpm.Core.Build;
 using Mpm.Core.Client;
 using Mpm.Core.Dbc;
+using Mpm.Core.Install;
 using Mpm.Core.Mpq;
 using Mpm.Core.Store;
 
@@ -18,6 +20,10 @@ return args switch
     ["remove", var id] => Remove(id),
     ["client", var data] => Client(data),
     ["baseline", var data, var locale, var path] => Baseline(data, locale, path),
+    ["build", var data, var locale, var outDir, .. var ids] when ids.Length > 0 => BuildPatch(data, locale, outDir, ids),
+    ["apply", var data, var buildDir, .. var extra] => Apply(data, buildDir, extra),
+    ["unapply", var data] => Unapply(data),
+    ["status", var data] => Status(data),
     _ => Usage(),
 };
 
@@ -127,6 +133,100 @@ static int Baseline(string data, string locale, string path)
     return 0;
 }
 
+static int BuildPatch(string data, string locale, string outDir, string[] ids)
+{
+    var store = new ModStore(ModStore.DefaultRoot());
+    var mods = ids.Select(store.Get).ToList();
+    using var baseline = new BaselineChain(data, locale);
+    foreach (var missing in baseline.Missing)
+    {
+        Console.WriteLine($"warning: missing stock archive {missing}");
+    }
+    var result = new PatchBuilder(store, baseline, DbcLayouts.For335()).Build(mods);
+    var archives = BuildOutput.Write(result, outDir);
+    Console.Write(BuildOutput.Summarize(result.Report, archives));
+    return 0;
+}
+
+static int Apply(string data, string buildDir, string[] extra)
+{
+    // Default: disable the client's custom patches that are byte-identical to a mod in this build.
+    var report = BuildOutput.ReadReport(buildDir);
+    var store = new ModStore(ModStore.DefaultRoot());
+    var sources = report.ModOrder.Select(id => store.Get(id).Source.Sha256).ToHashSet();
+    var client = new ClientInstall(data);
+    var disable = new List<string>();
+    var keep = new List<string>();
+    foreach (var patch in client.CustomPatches())
+    {
+        (sources.Contains(Installer.Sha256File(patch.Path)) ? disable : keep).Add(patch.Path);
+    }
+    for (var i = 0; i < extra.Length; i++)
+    {
+        if (extra[i] == "--disable" && i + 1 < extra.Length)
+        {
+            disable.Add(extra[++i]);
+        }
+        else
+        {
+            Console.Error.WriteLine($"unknown option {extra[i]}");
+            return 2;
+        }
+    }
+    var ledger = new Installer(data).Apply(buildDir, disable);
+    foreach (var r in ledger.Renamed)
+    {
+        Console.WriteLine($"disabled {r.Original} -> {r.RenamedTo} ({r.Reason})");
+    }
+    foreach (var a in ledger.Installed)
+    {
+        Console.WriteLine($"installed {a.Path}");
+    }
+    foreach (var k in keep.Where(k => !ledger.Renamed.Any(r => Path.Combine(client.DataDir, r.Original) == k)))
+    {
+        Console.WriteLine($"warning: {Path.GetRelativePath(client.DataDir, k)} is not part of this build and still loads");
+    }
+    return 0;
+}
+
+static int Unapply(string data)
+{
+    var result = new Installer(data).Unapply();
+    foreach (var r in result.Removed)
+    {
+        Console.WriteLine($"removed {r}");
+    }
+    foreach (var r in result.Restored)
+    {
+        Console.WriteLine($"restored {r}");
+    }
+    foreach (var p in result.Problems)
+    {
+        Console.WriteLine($"problem: {p}");
+    }
+    return result.Problems.Count == 0 ? 0 : 1;
+}
+
+static int Status(string data)
+{
+    var ledger = new Installer(data).ReadLedger();
+    if (ledger is null)
+    {
+        Console.WriteLine("no build applied");
+        return 0;
+    }
+    Console.WriteLine($"applied {ledger.AppliedAt:u} from {ledger.BuildDir}");
+    foreach (var r in ledger.Renamed)
+    {
+        Console.WriteLine($"  disabled {r.Original} -> {r.RenamedTo} ({r.Reason})");
+    }
+    foreach (var a in ledger.Installed)
+    {
+        Console.WriteLine($"  installed {a.Path}");
+    }
+    return 0;
+}
+
 static int Usage()
 {
     Console.Error.WriteLine("""
@@ -141,6 +241,11 @@ static int Usage()
           mpm remove <id>                  remove a mod from the store
           mpm client <Data dir>            list locales and patch archives
           mpm baseline <Data dir> <locale> <path>   which stock archive provides a file
+          mpm build <Data dir> <locale> <out dir> <mod id>...   merge mods (last = highest priority)
+          mpm apply <Data dir> <build dir> [--disable <patch>]...  install a build; custom patches identical
+                                           to a mod in the build are renamed to *.mpm-off
+          mpm unapply <Data dir>           remove the build and restore renamed patches
+          mpm status <Data dir>            show what is applied
         """);
     return 2;
 }

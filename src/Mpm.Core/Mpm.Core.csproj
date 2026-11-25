@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Table layouts adapted from WoWDBDefs (CC BY-SA 4.0); see data/wowdbdefs/ATTRIBUTION.md. -->
+    <EmbeddedResource Include="../../data/wowdbdefs/layouts-3.3.5.12340.json" LogicalName="layouts-3.3.5.12340.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>
 
