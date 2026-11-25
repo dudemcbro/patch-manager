@@ -8,14 +8,14 @@ Project dir is empty (`/var/mnt/d-drive/dev/mod-patch-manager`); greenfield.
 ## Decisions (from discussion)
 - Contents handled: DBCs, models/textures (BLP/M2/WMO/ADT), UI Lua/XML.
 - DBC conflicts: **hybrid** - 3-way field merge vs stock baseline when changed fields don't overlap; priority on overlap; every conflict in a report; per-conflict overrides saved in profile.
-- Stack: **C# / .NET 8 + Avalonia** desktop GUI (Linux first, Bazzite).
+- Stack: **C# / .NET 11 (installed SDK) + Avalonia** desktop GUI (Linux first, Bazzite).
 - Scope: **client only**. No server writes.
 - **Two tiers** (needed because players use local patches the server doesn't know about):
   - *Server* mods: authoritative, locked, never renumbered, win overlapping fields.
   - *Local* mods (HD, UI, personal): merged around server data.
 - **Auto-renumber** applies only to Local new-record IDs that clash; references rewritten inside Local mods only. Never renumber IDs that server-referenced rows depend on (e.g. `ItemDisplayInfo` used by server items). Server-vs-server clash = hard error.
 - Input: MPQ, loose folders, zip - all normalized on import into a managed store (extracted files + manifest).
-- Baseline: read from the user's clean client (`common*.MPQ`, `expansion*`, `lichking*`, locale MPQs, stock `patch.MPQ`, `patch-2`, `patch-3`).
+- Baseline: read from the user's clean client (`common*.MPQ`, `expansion*`, `lichking*`, locale MPQs, stock `patch.MPQ`, `patch-2`, `patch-3`). Note: in 3.3.5a all DBCs live in the locale archives (`<loc>/locale-<loc>.MPQ`, `patch-<loc>*.MPQ`), not the root ones.
 - Output: one generated patch (e.g. `patch-Z.MPQ`, plus `patch-<loc>-Z.MPQ` if locale files exist).
 - **Old patches are renamed, never deleted.** Managed patches are renamed to a non-loading name (e.g. `patch-4.MPQ` -> `patch-4.MPQ.mpm-off`; must not match any `patch-?.MPQ` pattern). A ledger (original name, new name, SHA-256) allows exact restore / "Unapply".
 
@@ -31,8 +31,8 @@ Project dir is empty (`/var/mnt/d-drive/dev/mod-patch-manager`); greenfield.
 ## Architecture
 Solution `ModPatchManager.sln`:
 - `Mpm.Core` - pipeline, no UI.
-  - `Mpq/` - read + write MPQ (evaluate StormLib via P/Invoke vs a managed lib; must support writing v1/v2 archives the 3.3.5 client accepts). Verify before choosing.
-  - `Dbc/` - WDBC reader/writer; layouts from WoWDBDefs (build 3.3.5.12340) incl. string block handling and foreign-key metadata (needed for renumber reference rewriting).
+  - `Mpq/` - own managed MPQ reader + writer (done, M1). War3Net.IO.Mpq was tried and rejected: it cannot read stock 3.3.5a archives (sector-CRC flag). Reader handles format 0/1 headers, encryption incl. fix-key, single-unit and sectored files, zlib + bzip2 (SharpZipLib, MIT), delete markers. Writer emits format 0, 4 KiB zlib sectors, (listfile), no (attributes) - same shape as the proven mod-tortoisewow writer.
+  - `Dbc/` - WDBC reader/writer (done, M1: raw records + verbatim string block, byte-identical round-trip on all stock enUS DBCs). Field widths vary (e.g. CharBaseInfo uses 1-byte fields), and not every DBC has a 4-byte ID in field 0, so layouts from WoWDBDefs (build 3.3.5.12340) are required before merging; they also give the foreign-key metadata renumbering needs.
   - `Import/` - MPQ/folder/zip -> store (`~/.local/share/mpm/store/<modId>/`), manifest.json (name, tier, source hash, file list).
   - `Baseline/` - resolve stock file per path using real client load order.
   - `Classify/` - per-field tier classification: field schema tags (gameplay / cosmetic / link) maintained as data file per DBC; manifest override; reasons recorded for UI.
@@ -58,7 +58,7 @@ Solution `ModPatchManager.sln`:
 7. Local-ID auto-renumber with FK rewriting.
 
 ## Open risks
-- MPQ write library choice on Linux/.NET - verify before M1.
+- MPQ write: resolved (own writer, verified by an independent reader). Still needs an in-game load test.
 - WoWDBDefs FK coverage for 3.3.5 may be incomplete -> renumber must refuse when relations unknown.
 - Locale MPQ load order details - confirm against client behavior.
 - Some mods ship patches that depend on another mod's patch; may need explicit dependencies in manifest.
