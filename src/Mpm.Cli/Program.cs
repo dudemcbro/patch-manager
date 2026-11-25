@@ -22,7 +22,8 @@ return args switch
     ["remove", var id] => Remove(id),
     ["client", var data] => Client(data),
     ["baseline", var data, var locale, var path] => Baseline(data, locale, path),
-    ["build", var data, var locale, var outDir, .. var ids] when ids.Length > 0 => BuildPatch(data, locale, outDir, ids),
+    ["build", var data, var locale, var outDir, "--answers", var answers, .. var ids] when ids.Length > 0 => BuildPatch(data, locale, outDir, ids, answers),
+    ["build", var data, var locale, var outDir, .. var ids] when ids.Length > 0 => BuildPatch(data, locale, outDir, ids, null),
     ["apply", var data, var buildDir, .. var extra] => Apply(data, buildDir, extra),
     ["unapply", var data] => Unapply(data),
     ["status", var data] => Status(data),
@@ -144,7 +145,7 @@ static int Baseline(string data, string locale, string path)
     return 0;
 }
 
-static int BuildPatch(string data, string locale, string outDir, string[] ids)
+static int BuildPatch(string data, string locale, string outDir, string[] ids, string? answersFile)
 {
     var store = new ModStore(ModStore.DefaultRoot());
     var mods = ids.Select(store.Get).ToList();
@@ -153,7 +154,8 @@ static int BuildPatch(string data, string locale, string outDir, string[] ids)
     {
         Console.WriteLine($"warning: missing stock archive {missing}");
     }
-    var result = new PatchBuilder(store, baseline, DbcLayouts.For335()).Build(mods);
+    var answers = answersFile is null ? null : BuildOutput.ReadAnswers(answersFile);
+    var result = new PatchBuilder(store, baseline, DbcLayouts.For335()).Build(mods, new BuildOptions(answers));
     var archives = BuildOutput.Write(result, outDir);
     Console.Write(BuildOutput.Summarize(result.Report, archives));
     return 0;
@@ -165,10 +167,11 @@ static int Apply(string data, string buildDir, string[] extra)
     var report = BuildOutput.ReadReport(buildDir);
     var store = new ModStore(ModStore.DefaultRoot());
     var buildMods = report.ModOrder.Select(store.Get).ToList();
-    var sources = buildMods.Where(m => m.IsComplete).Select(m => m.Source.Sha256).ToHashSet();
-    foreach (var m in buildMods.Where(m => !m.IsComplete))
+    var keepLoading = report.KeepLoading.ToHashSet();
+    var sources = buildMods.Where(m => !keepLoading.Contains(m.Id)).Select(m => m.Source.Sha256).ToHashSet();
+    foreach (var m in buildMods.Where(m => keepLoading.Contains(m.Id)))
     {
-        Console.WriteLine($"warning: {m.Id} has {m.UnnamedFiles} unidentified file(s); its source patch is left loading");
+        Console.WriteLine($"note: {m.Id} is kept loading (it has {m.UnnamedFiles} unidentified file(s))");
     }
     var client = new ClientInstall(data);
     var disable = new List<string>();
@@ -259,7 +262,9 @@ static int Usage()
           mpm remove <id>                  remove a mod from the store
           mpm client <Data dir>            list locales and patch archives
           mpm baseline <Data dir> <locale> <path>   which stock archive provides a file
-          mpm build <Data dir> <locale> <out dir> <mod id>...   merge mods (last = highest priority)
+          mpm build <Data dir> <locale> <out dir> [--answers <file>] <mod id>...
+                                           merge mods (last = highest priority); writes
+                                           build-questions.json: edit its answers, pass it back
           mpm apply <Data dir> <build dir> [--disable <patch>]...  install a build; custom patches identical
                                            to a mod in the build are renamed to *.mpm-off
           mpm unapply <Data dir>           remove the build and restore renamed patches

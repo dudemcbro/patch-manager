@@ -95,6 +95,7 @@ public sealed partial class ModStore
         }
 
         var hints = DefaultNameHints().Concat(nameHints ?? []).ToHashSet(MpqPath.Comparer);
+        ServerDeclaration? declaration = kind == SourceKind.Zip ? null : SourceScanner.ReadDeclaration(full, kind, warnings);
         int unnamed;
         switch (kind)
         {
@@ -110,6 +111,7 @@ public sealed partial class ModStore
                 try
                 {
                     SourceScanner.ExtractZip(full, temp);
+                    declaration = SourceScanner.ReadDeclaration(temp, SourceKind.Folder, warnings);
                     unnamed = SourceScanner.ScanFolder(temp, Sink, warnings, hints);
                 }
                 finally
@@ -138,7 +140,8 @@ public sealed partial class ModStore
             new ModSource(full, kind, sha),
             files.Values.OrderBy(f => f.Chain, StringComparer.Ordinal).ThenBy(f => f.Path, MpqPath.Comparer).ToList(),
             warnings,
-            unnamed);
+            unnamed,
+            declaration);
 
         var dir = Path.Combine(ModsDir, manifest.Id);
         Directory.CreateDirectory(dir);

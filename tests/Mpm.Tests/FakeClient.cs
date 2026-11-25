@@ -32,6 +32,49 @@ public static class FakeClient
         return table.Rows.ToDictionary(r => r[Titles.IdColumn], r => pool.Get(r[nameCol]));
     }
 
+    public static readonly DbcLayout Icons = DbcLayouts.For335().Find("SpellIcon")!;
+
+    /// <summary>SpellIcon rows: (ID, texture path). A cosmetic table.</summary>
+    public static byte[] IconsDbc(params (int Id, string Texture)[] rows)
+    {
+        var pool = new StringPool();
+        var list = rows.Select(r => new long[] { r.Id, pool.Intern(r.Texture) }).ToList();
+        return new DbcTable(Icons, pool, list).ToFile().ToBytes();
+    }
+
+    public static Dictionary<long, string> ReadIcons(byte[] dbc)
+    {
+        var pool = new StringPool();
+        return DbcTable.Read(DbcFile.Parse(dbc), Icons, pool).Rows.ToDictionary(r => r[0], r => pool.Get(r[1]));
+    }
+
+    /// <summary>CharTitles rows with every column given by name (others zero).</summary>
+    public static byte[] TitlesDbcFull(params (int Id, string Name, long Mask)[] rows)
+    {
+        var pool = new StringPool();
+        var cols = Titles.Columns.ToList();
+        var nameCol = cols.FindIndex(c => c.Name == "Name_lang[0]");
+        var maskCol = cols.FindIndex(c => c.Name == "Mask_ID");
+        var list = rows.Select(r =>
+        {
+            var row = new long[Titles.FieldCount];
+            row[Titles.IdColumn] = r.Id;
+            row[nameCol] = pool.Intern(r.Name);
+            row[maskCol] = r.Mask;
+            return row;
+        }).ToList();
+        return new DbcTable(Titles, pool, list).ToFile().ToBytes();
+    }
+
+    public static Dictionary<long, (string Name, long Mask)> ReadTitlesFull(byte[] dbc)
+    {
+        var pool = new StringPool();
+        var cols = Titles.Columns.ToList();
+        var nameCol = cols.FindIndex(c => c.Name == "Name_lang[0]");
+        var maskCol = cols.FindIndex(c => c.Name == "Mask_ID");
+        return DbcTable.Read(DbcFile.Parse(dbc), Titles, pool).Rows.ToDictionary(r => r[0], r => (pool.Get(r[nameCol]), r[maskCol]));
+    }
+
     /// <summary>Creates Data/patch.MPQ (root) and Data/enUS/locale-enUS.MPQ (stock CharTitles + a stock lua).</summary>
     public static string Create(string root)
     {
@@ -44,6 +87,7 @@ public static class FakeClient
         MpqWriter.Write(Path.Combine(data, "enUS", "locale-enUS.MPQ"), new Dictionary<string, byte[]>
         {
             ["DBFilesClient\\CharTitles.dbc"] = TitlesDbc((1, "Private"), (2, "Corporal"), (3, "Sergeant")),
+            ["DBFilesClient\\SpellIcon.dbc"] = IconsDbc((1, "Interface\\Icons\\Stock1"), (2, "Interface\\Icons\\Stock2")),
             ["Interface\\FrameXML\\Stock.lua"] = "stock"u8.ToArray(),
         });
         return data;

@@ -39,7 +39,9 @@ Solution `ModPatchManager.sln`:
   - `Dbc/` layouts (done, M3) - vendored 3.3.5.12340 extract of WoWDBDefs in `data/wowdbdefs/` (CC BY-SA 4.0, attribution there; layouts only, no game data), embedded in Mpm.Core. Every stock enUS DBC matches its layout (tested). Each file is checked against its layout at build time (field count + record size), so a client whose server changed a table's shape falls back to whole-file merge for that table instead of corrupting it. Planned: infer layouts for unmatched/custom tables per client, cached by DBC hash; detect build from Wow.exe.
   - `Build/` (done, M3: priority merge) - `PatchBuilder`: per path, drop mod copies identical to stock; DBCs with matching layouts merge by row on ID (a mod only claims rows it changed vs stock; same row changed by two mods = conflict, later mod wins; stock rows are never deleted); ID-less tables are a row union; everything else is whole-file priority. A mod shipping one path in both chains uses the copy in the stock chain. Output placed by the stock copy's chain, new `Interface\`/`DBFilesClient\`/`Fonts\` files -> locale, else root. `BuildOutput` writes `patch-Z.MPQ`, `<loc>/patch-<loc>-Z.MPQ`, `build-report.json/.txt`.
   - `Install/` (done, M3) - `Installer.Apply` renames patches to `<name>.mpm-off` (never deletes; also renames whatever already occupies the build's slot), installs the build archives, and writes `Data/.mpm-ledger.json` after every step. `Unapply` deletes only archives it installed whose hash still matches (else moves them to `.mpm-modified`), renames everything back, verifies hashes. CLI default: disable the client's custom patches byte-identical to a mod in the build.
-  - `Merge/` (planned, M4+) - per-file-type strategies:
+  - M4 (done): `PatchBuilder` merges DBCs field by field against stock (3-way). Tiers per mod: answer > `mpm-server.json` (folder/zip root or inside an MPQ) > auto (Server if it changes any gameplay field or adds gameplay rows). Classification in `data/classification-3.3.5.12340.json` (our own data): cosmetic tables and cosmetic columns of mixed tables; all text and server-sent IDs are gameplay. Local mods' gameplay edits are dropped unless the user keeps them; Server changes beat Local on the same field by default.
+  - Questions (done, M4): every judgment call is a `Question` with a stable id, options, default and chosen value: `tier:<mod>`, `rows:<path>:<mods>` (same field changed differently), `newrows:<path>:<mods>` (same new ID), `file:<path>:<mods>`, `removals:<path>:<mod>` (mod lacks stock rows; default keep), `localgameplay:<mod>`, `incomplete:<mod>` (unidentified files; default keep the source patch loading). Answers go back in via `BuildOptions` (CLI: `build --answers build-questions.json`). The GUI presents these.
+  - `Merge/` (planned) - remaining per-file-type strategies:
     - DBC: row-level 3-way merge on ID, field diffs vs baseline, tier rules, cosmetic allow-list, override application.
     - Lua/XML/TOC: 3-way text merge vs stock; on conflict fall back to priority + report.
     - Binary assets: priority only, report.
@@ -53,8 +55,13 @@ Solution `ModPatchManager.sln`:
 1. MPQ read/write + DBC read/write round-trip (byte-identical on stock files).
 2. Import + store + baseline resolution.
 3. DBC merge (priority only), single output patch, rename ledger apply/unapply. -> usable MVP. (done; verified on the tortoise patches: 54 DBCs merged with row sets identical to the mod's, apply/unapply restores the Data dir exactly. In-game: verified 2026-11-25 on a reflink clone of a ChromieCraft client: 7 custom patches (A, B, d, J, Q, U, Z) merged into one build, character logged in world, unapply restored the Data dir byte-identically. That client showed the original problem: patch-B and patch-d both ship Spell.dbc, so 8 of patch-B's spell edits never load today; the merge keeps them.)
-4. 3-way field merge, per-field classification, manifest support, cosmetic allow-list, conflict report.
-5. GUI conflict browser + saved overrides; profiles.
+4. 3-way field merge, per-field classification, manifest support, cosmetic allow-list, conflict report. (done; on the ChromieCraft set it removed 8 false Spell.dbc conflicts where two patches made identical edits, and detected A/B/d/Q as server, J/U/Z as local.)
+5. Minimal GUI (Avalonia), per user request 2026-11-25:
+   - Inputs: (a) a WoW client (merge everything in its Data and locale patch folders), (b) a folder and its subfolders, (c) drag and drop of patches.
+   - Output: one merged patch (with the locale companion when needed); for a client, optionally apply/unapply.
+   - Every Question is shown as yes/no or multiple choice with the default preselected; changing answers rebuilds.
+   - Packages: Linux AppImage (tested), Windows and macOS (built but NOT tested by the user; say so in release notes).
+   - Profiles / saved answers per server.
 6. Lua/XML text merge.
 7. Local-ID auto-renumber with FK rewriting.
 

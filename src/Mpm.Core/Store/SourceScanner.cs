@@ -35,7 +35,7 @@ internal static class SourceScanner
         {
             warnings.Add($"{label}: {unnamed} file(s) could not be identified and were not imported; this patch will be kept loading when a build is applied");
         }
-        foreach (var f in names)
+        foreach (var f in names.Where(n => !n.Equals(ServerDeclaration.FileName, StringComparison.OrdinalIgnoreCase)))
         {
             sink(new Contribution(f, chain, reader.Read(f), label));
         }
@@ -62,6 +62,10 @@ internal static class SourceScanner
             }
 
             var top = Array.FindIndex(segments, s => ArchiveNames.KnownTopLevel.Contains(s));
+            if (top < 0 && segments.Length == 1 && segments[0].Equals(ServerDeclaration.FileName, StringComparison.OrdinalIgnoreCase))
+            {
+                continue; // read separately by ModStore
+            }
             if (top < 0)
             {
                 warnings.Add($"skipped {rel.Replace('\\', '/')}: not under a known client folder");
@@ -112,6 +116,48 @@ internal static class SourceScanner
             entry.ExtractToFile(target, overwrite: false);
         }
     }
+
+    /// <summary>Reads an mpm-server.json from a folder root, or from inside an MPQ. Invalid files produce a warning.</summary>
+    public static ServerDeclaration? ReadDeclaration(string source, SourceKind kind, List<string> warnings)
+    {
+        byte[]? bytes = null;
+        if (kind == SourceKind.Folder)
+        {
+            var path = Directory.EnumerateFiles(source)
+                .FirstOrDefault(f => Path.GetFileName(f).Equals(ServerDeclaration.FileName, StringComparison.OrdinalIgnoreCase));
+            bytes = path is null ? null : File.ReadAllBytes(path);
+        }
+        else if (kind == SourceKind.Mpq)
+        {
+            using var reader = MpqReader.Open(source);
+            bytes = reader.TryRead(ServerDeclaration.FileName, out var data) ? data : null;
+        }
+        if (bytes is null)
+        {
+            return null;
+        }
+        try
+        {
+            var d = System.Text.Json.JsonSerializer.Deserialize<ServerDeclaration>(bytes, DeclarationJson);
+            if (d is null || d.Schema != 1)
+            {
+                warnings.Add($"{ServerDeclaration.FileName}: unsupported or empty; ignored");
+                return null;
+            }
+            return d;
+        }
+        catch (System.Text.Json.JsonException e)
+        {
+            warnings.Add($"{ServerDeclaration.FileName}: not valid ({e.Message}); ignored");
+            return null;
+        }
+    }
+
+    private static readonly System.Text.Json.JsonSerializerOptions DeclarationJson = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter(System.Text.Json.JsonNamingPolicy.CamelCase) },
+    };
 
     public static string ChainForMpq(string fileName, string? parentDir)
     {
