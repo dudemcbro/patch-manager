@@ -13,8 +13,10 @@ return args switch
     ["cat", var mpq, var file, var outPath] => Extract(mpq, file, outPath),
     ["dbc", var mpq, var file] => DbcInfo(mpq, file),
     ["pack", var outPath, var dir] => Pack(outPath, dir),
-    ["import", var source] => Import(source, null),
-    ["import", var source, var name] => Import(source, name),
+    ["import", var source, "--client", var data] => Import(source, null, data),
+    ["import", var source, var name, "--client", var data] => Import(source, name, data),
+    ["import", var source] => Import(source, null, null),
+    ["import", var source, var name] => Import(source, name, null),
     ["mods"] => Mods(),
     ["show", var id] => Show(id),
     ["remove", var id] => Remove(id),
@@ -67,10 +69,19 @@ static int Pack(string outPath, string dir)
     return 0;
 }
 
-static int Import(string source, string? name)
+static int Import(string source, string? name, string? clientData)
 {
     var store = new ModStore(ModStore.DefaultRoot());
-    var (manifest, already) = store.Import(source, name);
+    var hints = new List<string>();
+    if (clientData is not null)
+    {
+        foreach (var locale in new ClientInstall(clientData).Locales)
+        {
+            using var baseline = new BaselineChain(clientData, locale);
+            hints.AddRange(baseline.Paths.Keys);
+        }
+    }
+    var (manifest, already) = store.Import(source, name, hints);
     Console.WriteLine(already ? $"already imported as {manifest.Id}" : $"imported {manifest.Id}: {manifest.Files.Count} files");
     foreach (var w in manifest.Warnings)
     {
@@ -153,7 +164,12 @@ static int Apply(string data, string buildDir, string[] extra)
     // Default: disable the client's custom patches that are byte-identical to a mod in this build.
     var report = BuildOutput.ReadReport(buildDir);
     var store = new ModStore(ModStore.DefaultRoot());
-    var sources = report.ModOrder.Select(id => store.Get(id).Source.Sha256).ToHashSet();
+    var buildMods = report.ModOrder.Select(store.Get).ToList();
+    var sources = buildMods.Where(m => m.IsComplete).Select(m => m.Source.Sha256).ToHashSet();
+    foreach (var m in buildMods.Where(m => !m.IsComplete))
+    {
+        Console.WriteLine($"warning: {m.Id} has {m.UnnamedFiles} unidentified file(s); its source patch is left loading");
+    }
     var client = new ClientInstall(data);
     var disable = new List<string>();
     var keep = new List<string>();
@@ -235,7 +251,9 @@ static int Usage()
           mpm cat <mpq> <file> <out>       extract one file
           mpm dbc <mpq> <file>             DBC summary
           mpm pack <out.mpq> <dir>         build an archive from a folder
-          mpm import <mpq|zip|dir> [name]  import a mod into the store
+          mpm import <mpq|zip|dir> [name] [--client <Data dir>]
+                                           import a mod; --client uses the client's stock paths to
+                                           identify files in archives without a (listfile)
           mpm mods                         list imported mods
           mpm show <id>                    summarize one mod
           mpm remove <id>                  remove a mod from the store

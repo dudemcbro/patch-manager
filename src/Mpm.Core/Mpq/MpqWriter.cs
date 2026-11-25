@@ -14,7 +14,12 @@ public static class MpqWriter
     private const int SectorSize = 512 << SectorShift;
     private const int HeaderSize = 32;
 
-    public static void Write(string path, IReadOnlyDictionary<string, byte[]> files)
+    public static void Write(string path, IReadOnlyDictionary<string, byte[]> files) => Write(path, files, includeListFile: true);
+
+    /// <summary>Writes an archive with no (listfile), like many hand-made mod patches. Intended for tests.</summary>
+    public static void WriteWithoutListfile(string path, IReadOnlyDictionary<string, byte[]> files) => Write(path, files, includeListFile: false);
+
+    private static void Write(string path, IReadOnlyDictionary<string, byte[]> files, bool includeListFile)
     {
         var all = new Dictionary<string, byte[]>(MpqPath.Comparer);
         foreach (var (name, data) in files)
@@ -30,8 +35,11 @@ public static class MpqWriter
             }
         }
         var names = all.Keys.OrderBy(n => n, MpqPath.Comparer).ToList();
-        all["(listfile)"] = Encoding.Latin1.GetBytes(string.Concat(names.Select(n => n + "\r\n")));
-        names.Add("(listfile)");
+        if (includeListFile)
+        {
+            all["(listfile)"] = Encoding.Latin1.GetBytes(string.Concat(names.Select(n => n + "\r\n")));
+            names.Add("(listfile)");
+        }
 
         var hashSize = 16;
         while (hashSize < names.Count * 2)

@@ -47,7 +47,12 @@ public sealed partial class ModStore
         return Path.Combine(data, "mpm", "store");
     }
 
-    public ImportResult Import(string sourcePath, string? name = null)
+    /// <summary>
+    /// Imports a mod. <paramref name="nameHints"/> are extra candidate paths used to identify files in
+    /// archives that lack a (listfile), typically every stock path of the player's client. The DBC names
+    /// from the known layouts are always tried.
+    /// </summary>
+    public ImportResult Import(string sourcePath, string? name = null, IEnumerable<string>? nameHints = null)
     {
         var full = Path.GetFullPath(sourcePath);
         SourceKind kind;
@@ -89,20 +94,23 @@ public sealed partial class ModStore
             files[(c.Chain, path)] = new ModFile(path, c.Chain, fileSha, c.Data.LongLength, c.Origin);
         }
 
+        var hints = DefaultNameHints().Concat(nameHints ?? []).ToHashSet(MpqPath.Comparer);
+        int unnamed;
         switch (kind)
         {
             case SourceKind.Mpq:
-                SourceScanner.ScanMpq(full, Sink, warnings);
+                unnamed = SourceScanner.ScanMpq(full, Sink, warnings, hints);
                 break;
             case SourceKind.Folder:
-                SourceScanner.ScanFolder(full, Sink, warnings);
+                unnamed = SourceScanner.ScanFolder(full, Sink, warnings, hints);
                 break;
             default:
+                unnamed = 0;
                 var temp = Path.Combine(Root, "tmp", Guid.NewGuid().ToString("N"));
                 try
                 {
                     SourceScanner.ExtractZip(full, temp);
-                    SourceScanner.ScanFolder(temp, Sink, warnings);
+                    unnamed = SourceScanner.ScanFolder(temp, Sink, warnings, hints);
                 }
                 finally
                 {
@@ -116,7 +124,9 @@ public sealed partial class ModStore
 
         if (files.Count == 0)
         {
-            throw new InvalidDataException($"No client files found in {full}");
+            throw new InvalidDataException(unnamed > 0
+                ? $"None of the {unnamed} file(s) in {full} could be identified (no (listfile)); try again with the client's stock paths as name hints"
+                : $"No client files found in {full}");
         }
 
         var displayName = name ?? Path.GetFileNameWithoutExtension(full.TrimEnd(Path.DirectorySeparatorChar));
@@ -127,13 +137,18 @@ public sealed partial class ModStore
             DateTimeOffset.UtcNow,
             new ModSource(full, kind, sha),
             files.Values.OrderBy(f => f.Chain, StringComparer.Ordinal).ThenBy(f => f.Path, MpqPath.Comparer).ToList(),
-            warnings);
+            warnings,
+            unnamed);
 
         var dir = Path.Combine(ModsDir, manifest.Id);
         Directory.CreateDirectory(dir);
         WriteAtomic(Path.Combine(dir, "manifest.json"), JsonSerializer.SerializeToUtf8Bytes(manifest, Json));
         return new ImportResult(manifest, AlreadyImported: false);
     }
+
+    /// <summary>Paths every import tries when an archive has no (listfile): all DBC names with a known layout.</summary>
+    public static IEnumerable<string> DefaultNameHints() =>
+        Dbc.DbcLayouts.For335().Tables.Select(t => $"DBFilesClient\\{t}.dbc");
 
     public IReadOnlyList<ModManifest> List() =>
         Directory.EnumerateDirectories(ModsDir)

@@ -87,6 +87,25 @@ public sealed class MpqReader : IDisposable
 
     public bool Contains(string path) => Find(path) is { } b && IsLive(b);
 
+    /// <summary>
+    /// Files named by the (listfile) plus any candidate names that exist in the archive. Archives often
+    /// ship without a (listfile); candidates (e.g. every stock path) recover the names of known files.
+    /// </summary>
+    public IReadOnlyList<string> FilesWith(IEnumerable<string> candidates) =>
+        Files.Concat(candidates.Select(MpqPath.Normalize).Where(n => n.Length > 0 && !n.StartsWith('(') && Contains(n)))
+            .Distinct(MpqPath.Comparer)
+            .OrderBy(n => n, MpqPath.Comparer)
+            .ToList();
+
+    /// <summary>Live files whose name is not among <paramref name="named"/> (internal "(...)" files excluded).</summary>
+    public int CountUnnamed(IEnumerable<string> named)
+    {
+        var known = named.Concat(["(listfile)", "(attributes)", "(signature)"])
+            .Select(n => (MpqCrypto.HashString(MpqPath.Normalize(n), MpqCrypto.HashA), MpqCrypto.HashString(MpqPath.Normalize(n), MpqCrypto.HashB)))
+            .ToHashSet();
+        return _hashes.Count(kv => !known.Contains(kv.Key) && kv.Value.Any(e => e.Block < _blocks.Length && IsLive(_blocks[e.Block])));
+    }
+
     /// <summary>True when the archive holds a delete marker for the path (hides it in lower archives).</summary>
     public bool IsDeleted(string path) => Find(path) is { } b && b.Flags.HasFlag(MpqFlags.DeleteMarker);
 

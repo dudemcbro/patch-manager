@@ -19,8 +19,15 @@ public sealed record ModManifest(
     DateTimeOffset ImportedAt,
     ModSource Source,
     IReadOnlyList<ModFile> Files,
-    IReadOnlyList<string> Warnings)
+    IReadOnlyList<string> Warnings,
+    int UnnamedFiles = 0)
 {
+    /// <summary>
+    /// True when the source holds files that could not be identified (archive without a (listfile) entry
+    /// for them). Those files are not in the store, so the source patch must keep loading.
+    /// </summary>
+    public bool IsComplete => UnnamedFiles == 0;
+
     public const int CurrentSchema = 1;
 }
 

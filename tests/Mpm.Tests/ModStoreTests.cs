@@ -139,3 +139,49 @@ public class ModStoreTests
         Assert.Throws<ArgumentException>(() => store.Remove("../../etc"));
     }
 }
+
+public class ListfileRecoveryTests
+{
+    [Fact]
+    public void ArchiveWithoutListfile_RecoversKnownNames_AndCountsTheRest()
+    {
+        using var tmp = new TempDir();
+        var path = tmp.File("patch-B.MPQ");
+        MpqWriter.Write(path, new Dictionary<string, byte[]>
+        {
+            ["DBFilesClient\\Spell.dbc"] = [1, 2, 3],
+            ["Textures\\Secret.blp"] = [4],
+            ["Interface\\Known.lua"] = [5],
+        });
+        StripListfile(path);
+
+        var store = new ModStore(tmp.File("store"));
+        var m = store.Import(path, nameHints: ["Interface\\Known.lua"]).Manifest;
+
+        Assert.Equal(["DBFilesClient\\Spell.dbc", "Interface\\Known.lua"], m.Files.Select(f => f.Path).Order(StringComparer.OrdinalIgnoreCase));
+        Assert.Equal(1, m.UnnamedFiles);
+        Assert.False(m.IsComplete);
+        Assert.Contains(m.Warnings, w => w.Contains("could not be identified"));
+    }
+
+    [Fact]
+    public void ArchiveWithNothingIdentifiable_FailsWithAHint()
+    {
+        using var tmp = new TempDir();
+        var path = tmp.File("patch-C.MPQ");
+        MpqWriter.Write(path, new Dictionary<string, byte[]> { ["Textures\\Secret.blp"] = [4] });
+        StripListfile(path);
+
+        var e = Assert.Throws<InvalidDataException>(() => new ModStore(tmp.File("store")).Import(path));
+        Assert.Contains("name hints", e.Message);
+    }
+
+    /// <summary>Rewrites the archive's (listfile) hash entry as deleted, as stripped mod patches have.</summary>
+    private static void StripListfile(string path)
+    {
+        using var reader = MpqReader.Open(path);
+        var files = reader.Files.ToDictionary(f => f, reader.Read);
+        reader.Dispose();
+        Mpm.Core.Mpq.MpqWriter.WriteWithoutListfile(path, files);
+    }
+}

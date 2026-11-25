@@ -17,21 +17,33 @@ internal static class SourceScanner
     /// <summary>Refuse zips that would expand beyond this (guards against zip bombs).</summary>
     public const long MaxZipBytes = 16L * 1024 * 1024 * 1024;
 
-    public static void ScanMpq(string path, ContributionSink sink, List<string> warnings, string? parentHint = null, string? origin = null)
+    /// <summary>Returns how many files in the archive could not be named.</summary>
+    public static int ScanMpq(string path, ContributionSink sink, List<string> warnings, IReadOnlyCollection<string> nameHints,
+        string? parentHint = null, string? origin = null)
     {
         var chain = ChainForMpq(Path.GetFileName(path), parentHint ?? Path.GetFileName(Path.GetDirectoryName(path)));
+        var label = origin ?? Path.GetFileName(path);
         using var reader = MpqReader.Open(path);
-        if (reader.Files.Count == 0)
+        var names = reader.FilesWith(nameHints);
+        var recovered = names.Count - reader.Files.Count;
+        if (recovered > 0)
         {
-            warnings.Add($"{Path.GetFileName(path)}: no (listfile) or no files listed; nothing imported from it");
+            warnings.Add($"{label}: {recovered} file name(s) recovered from known paths (archive has an incomplete or no (listfile))");
         }
-        foreach (var f in reader.Files)
+        var unnamed = reader.CountUnnamed(names);
+        if (unnamed > 0)
         {
-            sink(new Contribution(f, chain, reader.Read(f), origin ?? Path.GetFileName(path)));
+            warnings.Add($"{label}: {unnamed} file(s) could not be identified and were not imported; this patch will be kept loading when a build is applied");
         }
+        foreach (var f in names)
+        {
+            sink(new Contribution(f, chain, reader.Read(f), label));
+        }
+        return unnamed;
     }
 
-    public static void ScanFolder(string root, ContributionSink sink, List<string> warnings)
+    /// <summary>Returns how many files in the folder's archives could not be named.</summary>
+    public static int ScanFolder(string root, ContributionSink sink, List<string> warnings, IReadOnlyCollection<string> nameHints)
     {
         var mpqs = new List<(string Path, string Chain, int Order)>();
         var loose = new List<(string ArchivePath, string Chain, string File, string Rel)>();
@@ -62,15 +74,17 @@ internal static class SourceScanner
         }
 
         // MPQs in client priority order, then loose files on top.
+        var unnamed = 0;
         foreach (var (path, _, _) in mpqs.OrderBy(m => m.Order).ThenBy(m => m.Path, StringComparer.Ordinal))
         {
             var rel = Path.GetRelativePath(root, path).Split(Path.DirectorySeparatorChar);
-            ScanMpq(path, sink, warnings, rel.Length > 1 ? rel[^2] : null, string.Join('/', rel));
+            unnamed += ScanMpq(path, sink, warnings, nameHints, rel.Length > 1 ? rel[^2] : null, string.Join('/', rel));
         }
         foreach (var (archivePath, chain, file, rel) in loose)
         {
             sink(new Contribution(archivePath, chain, File.ReadAllBytes(file), rel));
         }
+        return unnamed;
     }
 
     /// <summary>Extracts a zip into <paramref name="destination"/>, rejecting entries that escape it.</summary>

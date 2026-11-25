@@ -52,7 +52,7 @@ Solution `ModPatchManager.sln`:
 ## Milestones
 1. MPQ read/write + DBC read/write round-trip (byte-identical on stock files).
 2. Import + store + baseline resolution.
-3. DBC merge (priority only), single output patch, rename ledger apply/unapply. -> usable MVP. (done; verified on the tortoise patches: 54 DBCs merged with row sets identical to the mod's, apply/unapply restores the Data dir exactly. In-game load test still pending.)
+3. DBC merge (priority only), single output patch, rename ledger apply/unapply. -> usable MVP. (done; verified on the tortoise patches: 54 DBCs merged with row sets identical to the mod's, apply/unapply restores the Data dir exactly. In-game: verified 2026-11-25 on a reflink clone of a ChromieCraft client: 7 custom patches (A, B, d, J, Q, U, Z) merged into one build, character logged in world, unapply restored the Data dir byte-identically. That client showed the original problem: patch-B and patch-d both ship Spell.dbc, so 8 of patch-B's spell edits never load today; the merge keeps them.)
 4. 3-way field merge, per-field classification, manifest support, cosmetic allow-list, conflict report.
 5. GUI conflict browser + saved overrides; profiles.
 6. Lua/XML text merge.
@@ -64,6 +64,7 @@ Solution `ModPatchManager.sln`:
 - Real mods do not follow that split (the tortoise patch-4 ships `Interface\` and `DBFilesClient\` in the root chain, and its DBCs again in patch-enUS-4). So the build must place each merged file by path, into the chain where its stock copy lives (new files: root, except `Interface\`/`DBFilesClient\`/`Fonts\` -> locale), and treat a mod's copies of one path in both chains as one contribution.
 - Still unverified: the client's order among custom slot characters (assumed ASCII: digits < letters) and root-vs-locale priority for custom patches. Only matters for describing what a user's current, unmanaged setup does; the tool's own output avoids it by using one slot.
 
+- Many mod patches ship without a (listfile). Import recovers names by testing candidates against the hash table (all layout DBC names, plus every stock path with `import --client`). Files that still cannot be named mark the mod incomplete (`UnnamedFiles`), and apply leaves that source patch loading.
 - `.mpm-off` suffix: Windows wildcard matching also checks 8.3 short names; "patch-4.MPQ.mpm-off" gets a short extension "MPM", not "MPQ", so `patch-?.MPQ` cannot match it.
 
 ## Open risks
