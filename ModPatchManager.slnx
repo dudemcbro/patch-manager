@@ -1,9 +1,11 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/Mpm.App/Mpm.App.csproj" />
     <Project Path="src/Mpm.Cli/Mpm.Cli.csproj" />
     <Project Path="src/Mpm.Core/Mpm.Core.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Mpm.App.Tests/Mpm.App.Tests.csproj" />
     <Project Path="tests/Mpm.Tests/Mpm.Tests.csproj" />
   </Folder>
 </Solution>

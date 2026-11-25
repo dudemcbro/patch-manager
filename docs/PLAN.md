@@ -62,6 +62,7 @@ Solution `ModPatchManager.sln`:
    - Every Question is shown as yes/no or multiple choice with the default preselected; changing answers rebuilds.
    - Packages: Linux AppImage (tested), Windows and macOS (built but NOT tested by the user; say so in release notes).
    - Profiles / saved answers per server.
+   (done: `Mpm.App` (code-only Avalonia UI) over `Mpm.Core.Session.MergeSession`; per-client profiles in `<app data>/profiles`; install builds kept in `<app data>/builds`; headless UI tests in `tests/Mpm.App.Tests` (xunit v3, required by Avalonia.Headless.XUnit 12); `packaging/` scripts build the AppImage (smoke-tested: launches) and cross-build Windows/macOS zips (untested, unsigned).)
 6. Lua/XML text merge.
 7. Local-ID auto-renumber with FK rewriting.
 
