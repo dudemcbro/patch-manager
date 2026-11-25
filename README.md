@@ -6,7 +6,7 @@ Desktop tool for AzerothCore 3.3.5a WoW clients that merges many mod patches int
 - Reports every conflict; overrides are saved per profile.
 - Never deletes existing patches: managed patches are renamed to a non-loading name and can be restored.
 
-Status: Milestone 1 done (MPQ read/write, WDBC read/write). See `docs/PLAN.md`.
+Status: Milestones 1-2 done (MPQ and DBC read/write, mod import store, stock baseline). See `docs/PLAN.md`.
 
 ## Build and test
 
@@ -27,6 +27,14 @@ dotnet run --project src/Mpm.Cli -- ls <archive.mpq>
 dotnet run --project src/Mpm.Cli -- dbc <archive.mpq> 'DBFilesClient\Spell.dbc'
 dotnet run --project src/Mpm.Cli -- cat <archive.mpq> <file> <out>
 dotnet run --project src/Mpm.Cli -- pack <out.mpq> <dir>
+dotnet run --project src/Mpm.Cli -- import <mod.mpq|mod.zip|folder> [name]
+dotnet run --project src/Mpm.Cli -- mods
+dotnet run --project src/Mpm.Cli -- show <id>
+dotnet run --project src/Mpm.Cli -- remove <id>
+dotnet run --project src/Mpm.Cli -- client <WoW/Data>
+dotnet run --project src/Mpm.Cli -- baseline <WoW/Data> enUS 'DBFilesClient\Spell.dbc'
 ```
+
+Imported mods live in `$MPM_STORE`, else `$XDG_DATA_HOME/mpm/store`, else `~/.local/share/mpm/store`. Import and remove never modify the source files or the client.
 
 Stack: C# / .NET 11 + Avalonia (GUI not started yet).

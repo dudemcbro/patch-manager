@@ -33,8 +33,8 @@ Solution `ModPatchManager.sln`:
 - `Mpm.Core` - pipeline, no UI.
   - `Mpq/` - own managed MPQ reader + writer (done, M1). War3Net.IO.Mpq was tried and rejected: it cannot read stock 3.3.5a archives (sector-CRC flag). Reader handles format 0/1 headers, encryption incl. fix-key, single-unit and sectored files, zlib + bzip2 (SharpZipLib, MIT), delete markers. Writer emits format 0, 4 KiB zlib sectors, (listfile), no (attributes) - same shape as the proven mod-tortoisewow writer.
   - `Dbc/` - WDBC reader/writer (done, M1: raw records + verbatim string block, byte-identical round-trip on all stock enUS DBCs). Field widths vary (e.g. CharBaseInfo uses 1-byte fields), and not every DBC has a 4-byte ID in field 0, so layouts from WoWDBDefs (build 3.3.5.12340) are required before merging; they also give the foreign-key metadata renumbering needs.
-  - `Import/` - MPQ/folder/zip -> store (`~/.local/share/mpm/store/<modId>/`), manifest.json (name, tier, source hash, file list).
-  - `Baseline/` - resolve stock file per path using real client load order.
+  - `Store/` (done, M2) - MPQ/folder/zip -> store (`$MPM_STORE` or `~/.local/share/mpm/store`). `mods/<id>/manifest.json` (name, source path/kind/sha256, files with chain + sha256 + origin, warnings); contents in zlib-compressed content-addressed `blobs/`. Folder import reads MPQs (client slot order) then loose files on top; loose files are mapped by the first known stock top-level folder, so `Data/`, `MyMod/Data/` etc. prefixes are stripped; junk (READMEs) is skipped with a warning. Zip import guards against path escape and >16 GiB expansion. Re-importing identical content returns the existing mod. Removing a mod only touches the store.
+  - `Client/` (done, M2) - `ClientInstall` lists locales and every patch the client loads (stock vs custom); `BaselineChain` resolves stock files from stock root + locale archives only.
   - `Classify/` - per-field tier classification: field schema tags (gameplay / cosmetic / link) maintained as data file per DBC; manifest override; reasons recorded for UI.
   - `Merge/` - per-file-type strategies:
     - DBC: row-level 3-way merge on ID, field diffs vs baseline, tier rules, cosmetic allow-list, override application.
@@ -56,6 +56,12 @@ Solution `ModPatchManager.sln`:
 5. GUI conflict browser + saved overrides; profiles.
 6. Lua/XML text merge.
 7. Local-ID auto-renumber with FK rewriting.
+
+## Findings (M1-M2)
+- Wow.exe (12340) embeds `patch-?.MPQ` (Data\) and `patch-%s-?.MPQ` (Data\<locale>\): exactly one slot character. Renamed copies like `patch-4.MPQ.prev` are ignored by the client.
+- Stock layout: `Interface\`, `DBFilesClient\`, `Fonts\` (and some `Sound\`) live only in the locale chain; models/textures/world only in the root chain. No stock path is in both chains (tested), so root-vs-locale priority never matters for the baseline.
+- Real mods do not follow that split (the tortoise patch-4 ships `Interface\` and `DBFilesClient\` in the root chain, and its DBCs again in patch-enUS-4). So the build must place each merged file by path, into the chain where its stock copy lives (new files: root, except `Interface\`/`DBFilesClient\`/`Fonts\` -> locale), and treat a mod's copies of one path in both chains as one contribution.
+- Still unverified: the client's order among custom slot characters (assumed ASCII: digits < letters) and root-vs-locale priority for custom patches. Only matters for describing what a user's current, unmanaged setup does; the tool's own output avoids it by using one slot.
 
 ## Open risks
 - MPQ write: resolved (own writer, verified by an independent reader). Still needs an in-game load test.
