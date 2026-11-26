@@ -75,6 +75,25 @@ public static class FakeClient
         return DbcTable.Read(DbcFile.Parse(dbc), Titles, pool).Rows.ToDictionary(r => r[0], r => (pool.Get(r[nameCol]), r[maskCol]));
     }
 
+    public static readonly DbcLayout Spell = DbcLayouts.For335().Find("Spell")!;
+    private static readonly int SpellIconCol = Spell.Columns.ToList().FindIndex(c => c.Name == "SpellIconID");
+
+    /// <summary>Spell rows: (ID, SpellIconID). Other columns zero.</summary>
+    public static byte[] SpellDbc(params (int Id, int Icon)[] rows)
+    {
+        var list = rows.Select(r =>
+        {
+            var row = new long[Spell.FieldCount];
+            row[Spell.IdColumn] = r.Id;
+            row[SpellIconCol] = r.Icon;
+            return row;
+        }).ToList();
+        return new DbcTable(Spell, new StringPool(), list).ToFile().ToBytes();
+    }
+
+    public static Dictionary<long, long> ReadSpellIcons(byte[] dbc) =>
+        DbcTable.Read(DbcFile.Parse(dbc), Spell, new StringPool()).Rows.ToDictionary(r => r[Spell.IdColumn], r => r[SpellIconCol]);
+
     public static readonly byte[] StockLua = System.Text.Encoding.UTF8.GetBytes(
         "local a = 1\r\nlocal b = 2\r\nlocal c = 3\r\nlocal d = 4\r\nlocal e = 5\r\nlocal f = 6\r\n");
 
@@ -91,6 +110,7 @@ public static class FakeClient
         {
             ["DBFilesClient\\CharTitles.dbc"] = TitlesDbc((1, "Private"), (2, "Corporal"), (3, "Sergeant")),
             ["DBFilesClient\\SpellIcon.dbc"] = IconsDbc((1, "Interface\\Icons\\Stock1"), (2, "Interface\\Icons\\Stock2")),
+            ["DBFilesClient\\Spell.dbc"] = SpellDbc((1, 1), (2, 2)),
             ["Interface\\FrameXML\\Stock.lua"] = StockLua,
         });
         return data;

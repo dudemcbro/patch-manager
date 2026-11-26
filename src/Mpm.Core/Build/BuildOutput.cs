@@ -80,6 +80,15 @@ public static class BuildOutput
             var detail = sample.Row is null ? "whole file" : $"{group.Count()} rows, e.g. ID {sample.Row}{(sample.Columns.Count > 0 ? $" ({string.Join(", ", sample.Columns.Take(5))})" : "")}";
             sb.AppendLine($"  {sample.Path}: {detail}; {string.Join(" vs ", sample.Mods)} -> {sample.Winner}");
         }
+        if (report.Renumbered is { Count: > 0 } renumbered)
+        {
+            sb.AppendLine($"Renumbered: {renumbered.Count}");
+            foreach (var r in renumbered)
+            {
+                var ids = string.Join(", ", r.Ids.Take(5).Select(i => $"{i.From}->{i.To}")) + (r.Ids.Count > 5 ? ", ..." : "");
+                sb.AppendLine($"  {r.Path}: {r.ModId}'s rows {ids} (clashed with {string.Join(", ", r.ClashedWith)}); updated {string.Join(", ", r.References)}");
+            }
+        }
         if (report.Dropped.Count > 0)
         {
             sb.AppendLine($"Not applied: {report.Dropped.Count}");

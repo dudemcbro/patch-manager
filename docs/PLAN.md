@@ -46,7 +46,7 @@ Solution `ModPatchManager.sln`:
     - DBC: row-level 3-way merge on ID, field diffs vs baseline, tier rules, cosmetic allow-list, override application.
     - Lua/XML/TOC: 3-way text merge vs stock; on conflict fall back to priority + report.
     - Binary assets: priority only, report.
-  - `Renumber/` - detect Local new-ID clashes, allocate free IDs in a reserved range, rewrite FKs within Local mods (per WoWDBDefs relations); refuse if ID is server-referenced.
+  - Renumber (done, M7: `Build/PatchBuilder.Renumber.cs`) - a pre-pass before merging. A clash is a new (non-stock) ID that a Local mod and a higher-precedence mod (Server first, then priority) both add with different content. The Local mod's rows are renumbered only when the mod itself points at them through a WoWDBDefs foreign key (`<Table>::ID`) from rows or fields it changed (not from rows identical to stock or to another mod's copy). That is the evidence the ID is internal to the mod; an unreferenced row is probably an ID the server sends, so it stays a `newrows` conflict. New IDs are max ID used in that table (stock + every copy) + 1, so tables stay compact; refused with a warning if a new ID does not fit a referencing column. Question `renumber:<path>:<mod>` (default yes; no = leave the rows out). Server mods are never renumbered. References from Lua/XML/models are not rewritten (said in the question). Report: `renumbered` list (old -> new IDs, rewritten columns).
   - `Profiles/` - profile JSON: client path, locale, mod order, tiers, overrides.
 - `Mpm.App` - Avalonia UI: profile picker, mod list (drag reorder, tier toggle), conflict browser (row/field view, pick winner), build/apply/unapply buttons, report viewer.
 - `Mpm.Cli` - thin headless wrapper (build/apply/unapply) for testing and scripting.
@@ -65,7 +65,7 @@ Solution `ModPatchManager.sln`:
    - Profiles / saved answers per server.
    (done: `Mpm.App` (code-only Avalonia UI) over `Mpm.Core.Session.MergeSession`; per-client profiles in `<app data>/profiles`; install builds kept in `<app data>/builds`; headless UI tests in `tests/Mpm.App.Tests` (xunit v3, required by Avalonia.Headless.XUnit 12); `packaging/` scripts build the AppImage (smoke-tested: launches) and cross-build Windows/macOS zips (untested, unsigned).)
 6. Lua/XML text merge. (done; on the Tortoise patch's 5 stock UI overrides: 4 merged and matched exactly, 1 correctly refused (edit at end of file touching the test edit); about 25 ms for a 17 KB file.)
-7. Local-ID auto-renumber with FK rewriting.
+7. Local-ID auto-renumber with FK rewriting. (done; unit-tested (server vs local, local vs local, unreferenced rows, answer no, server never renumbered). On the Tortoise patch with an older snapshot posing as a local mod, the pass found clashing new rows (Map 900, Spell 200099) but nothing in the snapshot's own changes points at them, so they correctly stayed conflicts; the pass added about 2 s / 230 MB to an 11.5 s build. Not yet tested in game with a real clashing local mod.)
 
 ## Findings (M1-M2)
 - Wow.exe (12340) embeds `patch-?.MPQ` (Data\) and `patch-%s-?.MPQ` (Data\<locale>\): exactly one slot character. Renamed copies like `patch-4.MPQ.prev` are ignored by the client.
@@ -78,7 +78,7 @@ Solution `ModPatchManager.sln`:
 
 ## Open risks
 - MPQ write: resolved (own writer, verified by an independent reader). Still needs an in-game load test.
-- WoWDBDefs FK coverage for 3.3.5 may be incomplete -> renumber must refuse when relations unknown.
+- WoWDBDefs FK coverage for 3.3.5 is incomplete (312 annotated FKs; e.g. SoundKit, WorldState targets have no table). Renumber only acts on references it can see, and only when it sees at least one; an unannotated reference to a renumbered row would keep the old ID.
 - Locale MPQ load order details - confirm against client behavior.
 - Some mods ship patches that depend on another mod's patch; may need explicit dependencies in manifest.
 

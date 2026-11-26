@@ -6,7 +6,7 @@ Desktop tool for AzerothCore 3.3.5a WoW clients that merges many mod patches int
 - Reports every conflict; overrides are saved per profile.
 - Never deletes existing patches: managed patches are renamed to a non-loading name and can be restored.
 
-Status: Milestones 1-6 done: MPQ/DBC read/write, mod import store, stock baseline, field-level DBC merge with server/local tiers and questions, line-level Lua/XML/TOC merge, apply/unapply, and a minimal desktop GUI. Tested in-game on a ChromieCraft client.
+Status: Milestones 1-7 done: MPQ/DBC read/write, mod import store, stock baseline, field-level DBC merge with server/local tiers and questions, line-level Lua/XML/TOC merge, renumbering of clashing local-mod IDs (with their references), apply/unapply, and a minimal desktop GUI. Tested in-game on a ChromieCraft client.
 
 ## Desktop app
 

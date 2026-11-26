@@ -50,6 +50,11 @@ public sealed record FileDecision(
     int RowsRemoved = 0,
     int RowsCombined = 0);
 
+public sealed record IdChange(long From, long To);
+
+/// <summary>A Local mod's new rows that clashed on ID with another mod's rows and were given free IDs. References lists the rewritten columns.</summary>
+public sealed record RenumberedRows(string Path, string ModId, IReadOnlyList<string> ClashedWith, IReadOnlyList<IdChange> Ids, IReadOnlyList<string> References, string QuestionId);
+
 public sealed record BuildReport(
     string Locale,
     IReadOnlyList<string> ModOrder,
@@ -59,4 +64,5 @@ public sealed record BuildReport(
     IReadOnlyList<DroppedChange> Dropped,
     IReadOnlyList<Question> Questions,
     IReadOnlyList<string> KeepLoading,
-    IReadOnlyList<string> Warnings);
+    IReadOnlyList<string> Warnings,
+    IReadOnlyList<RenumberedRows>? Renumbered = null);

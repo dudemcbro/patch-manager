@@ -24,9 +24,12 @@ public sealed record BuildOptions(IReadOnlyDictionary<string, string>? Answers =
 /// to honor rows a mod removed, ...) is recorded as a <see cref="Question"/> with a default; answering
 /// it and building again applies the answer.
 ///
+/// Local mods whose new rows clash with another mod's new rows on ID get fresh IDs (with their own
+/// references rewritten) when that is safe; see <c>Renumber</c>.
+///
 /// Everything else is file-level: the highest-priority mod that changes a file wins.
 /// </summary>
-public sealed class PatchBuilder
+public sealed partial class PatchBuilder
 {
     private static readonly HashSet<string> LocaleTopLevel = new(StringComparer.OrdinalIgnoreCase) { "interface", "dbfilesclient", "fonts" };
     private static readonly IReadOnlyList<string> YesNo = ["yes", "no"];
@@ -65,7 +68,7 @@ public sealed class PatchBuilder
     }
 
     /// <summary>One build: holds the per-build state so the builder itself stays reusable.</summary>
-    private sealed class Run
+    private sealed partial class Run
     {
         private readonly PatchBuilder _b;
         private readonly IReadOnlyList<ModManifest> _mods;
@@ -109,13 +112,14 @@ public sealed class PatchBuilder
             var byPath = CollectPaths();
             var tiers = DecideTiers(byPath);
             var keepLoading = AskIncomplete();
+            var renumbered = Renumber(byPath);
 
             var chains = new Dictionary<string, Dictionary<string, byte[]>>(StringComparer.Ordinal);
             foreach (var (path, contributions) in byPath.OrderBy(kv => kv.Key, MpqPath.Comparer))
             {
                 var hasStock = _b._baseline.TryRead(path, out var stock);
                 var copies = contributions
-                    .Select(c => (c.Mod, Data: _b._store.Read(c.File)))
+                    .Select(c => (c.Mod, Data: renumbered.GetValueOrDefault((c.Mod.Id, path)) ?? _b._store.Read(c.File)))
                     .Where(c => !hasStock || !c.Data.AsSpan().SequenceEqual(stock))
                     .ToList();
                 if (copies.Count == 0)
@@ -144,7 +148,7 @@ public sealed class PatchBuilder
                 _warnings.Add($"answer '{unused}' does not match any question in this build; ignored");
             }
             var report = new BuildReport(_b._baseline.Locale, _mods.Select(m => m.Id).ToList(), tiers, _decisions, _conflicts,
-                _dropped, _q.All(), keepLoading, _warnings);
+                _dropped, _q.All(), keepLoading, _warnings, _renumbered);
             return new BuildResult(chains, report);
         }
 
