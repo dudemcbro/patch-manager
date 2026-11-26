@@ -61,6 +61,10 @@ dotnet run --project src/Mpm.Cli -- unapply <WoW/Data>
 
 `apply` renames the client's custom patches that are identical to a mod in the build (and anything already in the build's slot) to `<name>.mpm-off`, which the client does not load, then installs the build. `unapply` reverses it from `Data/.mpm-ledger.json`. Nothing is deleted except the archives `apply` installed.
 
+## License
+
+Copyright (C) 2026 dudemcbro. Licensed under the GNU Affero General Public License v3.0 or later (`AGPL-3.0-or-later`); see `LICENSE`. The bundled WoWDBDefs layouts keep their own license (below).
+
 ## Third-party data
 
 `data/wowdbdefs/` holds DBC table layouts adapted from [WoWDBDefs](https://github.com/wowdev/WoWDBDefs), licensed CC BY-SA 4.0 (see that folder's `LICENSE.md` and `ATTRIBUTION.md`). It contains no game data; the tool reads stock data from the player's own client at run time.

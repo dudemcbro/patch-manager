@@ -13,4 +13,8 @@ publish() {
     -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true \
     -p:DebugType=none -o "$2"
   find "$2" -name '*.pdb' -delete   # native debug symbols shipped by SkiaSharp/HarfBuzz
+  # AGPL text for the app, plus attribution for the WoWDBDefs layouts embedded in it (CC BY-SA 4.0).
+  cp "$ROOT/LICENSE" "$2/LICENSE.txt"
+  cp "$ROOT/data/wowdbdefs/LICENSE.md" "$2/WoWDBDefs-LICENSE.md"
+  cp "$ROOT/data/wowdbdefs/ATTRIBUTION.md" "$2/WoWDBDefs-ATTRIBUTION.md"
 }
