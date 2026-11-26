@@ -8,7 +8,11 @@ namespace Mpm.Core.Store;
 /// <summary>A file found in a mod source, before it is stored. Later contributions win within a mod.</summary>
 internal sealed record Contribution(string Path, string Chain, byte[] Data, string Origin);
 
-/// <summary>Receives files one at a time, in priority order (lowest first), so large mods are never held in memory.</summary>
+/// <summary>
+/// Receives files in priority order (lowest first), so large mods are never held in memory. Files of one
+/// archive are delivered concurrently (they have distinct names); separate archives and loose files are
+/// delivered one after another, so the sink must be thread-safe but may rely on that ordering.
+/// </summary>
 internal delegate void ContributionSink(Contribution contribution);
 
 /// <summary>Turns an MPQ, folder or zip into an ordered list of archive files.</summary>
@@ -18,32 +22,63 @@ internal static class SourceScanner
     public const long MaxZipBytes = 16L * 1024 * 1024 * 1024;
 
     /// <summary>Returns how many files in the archive could not be named.</summary>
-    public static int ScanMpq(string path, ContributionSink sink, List<string> warnings, IReadOnlyCollection<string> nameHints,
+    public static int ScanMpq(string path, ContributionSink sink, List<string> warnings, IEnumerable<string> nameHints,
         string? parentHint = null, string? origin = null)
     {
         var chain = ChainForMpq(Path.GetFileName(path), parentHint ?? Path.GetFileName(Path.GetDirectoryName(path)));
         var label = origin ?? Path.GetFileName(path);
-        using var reader = MpqReader.Open(path);
-        var names = reader.FilesWith(nameHints);
-        var recovered = names.Count - reader.Files.Count;
-        if (recovered > 0)
+        IReadOnlyList<string> names;
+        int unnamed;
+        using (var reader = MpqReader.Open(path))
         {
-            warnings.Add($"{label}: {recovered} file name(s) recovered from known paths (archive has an incomplete or no (listfile))");
+            // Testing the hints hashes every candidate name, so only do it when the listfile is incomplete.
+            names = reader.CountUnnamed(reader.Files) > 0 ? reader.FilesWith(nameHints) : reader.Files;
+            unnamed = reader.CountUnnamed(names);
+            var recovered = names.Count - reader.Files.Count;
+            if (recovered > 0)
+            {
+                warnings.Add($"{label}: {recovered} file name(s) recovered from known paths (archive has an incomplete or no (listfile))");
+            }
         }
-        var unnamed = reader.CountUnnamed(names);
         if (unnamed > 0)
         {
             warnings.Add($"{label}: {unnamed} file(s) could not be identified and were not imported; this patch will be kept loading when a build is applied");
         }
-        foreach (var f in names.Where(n => !n.Equals(ServerDeclaration.FileName, StringComparison.OrdinalIgnoreCase)))
+        // Decompressing, hashing and storing dominate import time; spread them over the cores, one reader per worker.
+        var todo = names.Where(n => !n.Equals(ServerDeclaration.FileName, StringComparison.OrdinalIgnoreCase)).ToList();
+        // Fixed workers, each with its own reader (opening a large archive is not free), pulling the next file index.
+        var next = -1;
+        var failed = 0;
+        var workers = Enumerable.Range(0, Math.Clamp(todo.Count, 1, Environment.ProcessorCount)).Select(_ => Task.Run(() =>
         {
-            sink(new Contribution(f, chain, reader.Read(f), label));
+            using var reader = MpqReader.Open(path);
+            int i;
+            while (Volatile.Read(ref failed) == 0 && (i = Interlocked.Increment(ref next)) < todo.Count)
+            {
+                try
+                {
+                    sink(new Contribution(todo[i], chain, reader.Read(todo[i]), label));
+                }
+                catch
+                {
+                    Interlocked.Exchange(ref failed, 1);
+                    throw;
+                }
+            }
+        })).ToArray();
+        try
+        {
+            Task.WaitAll(workers);
+        }
+        catch (AggregateException e) when (e.InnerExceptions.Count > 0)
+        {
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw(e.InnerExceptions[0]);
         }
         return unnamed;
     }
 
     /// <summary>Returns how many files in the folder's archives could not be named.</summary>
-    public static int ScanFolder(string root, ContributionSink sink, List<string> warnings, IReadOnlyCollection<string> nameHints)
+    public static int ScanFolder(string root, ContributionSink sink, List<string> warnings, IEnumerable<string> nameHints)
     {
         var mpqs = new List<(string Path, string Chain, int Order)>();
         var loose = new List<(string ArchivePath, string Chain, string File, string Rel)>();

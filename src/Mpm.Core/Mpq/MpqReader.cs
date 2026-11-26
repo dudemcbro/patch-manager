@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Buffers.Binary;
 using System.IO.Compression;
 using System.Text;
@@ -18,6 +19,7 @@ public sealed class MpqReader : IDisposable
     private readonly Dictionary<(uint A, uint B), List<(ushort Locale, uint Block)>> _hashes = new();
     private readonly BlockEntry[] _blocks;
     private IReadOnlyList<string>? _files;
+    private readonly ZLibDecoder _zlib = new(); // reused per sector; a reader is used by one thread at a time
 
     private readonly record struct BlockEntry(uint Offset, uint PackedSize, uint FileSize, MpqFlags Flags);
 
@@ -128,66 +130,136 @@ public sealed class MpqReader : IDisposable
             throw new FileNotFoundException($"{name} not found in {SourcePath}");
         }
 
-        var raw = new byte[block.PackedSize];
-        ReadAt(_base + block.Offset, raw);
         var encrypted = block.Flags.HasFlag(MpqFlags.Encrypted);
         var key = encrypted ? MpqCrypto.FileKey(name, block.Offset, block.FileSize, block.Flags.HasFlag(MpqFlags.FixKey)) : 0;
         var compressed = (block.Flags & (MpqFlags.Compress | MpqFlags.Implode)) != 0;
 
-        if (block.Flags.HasFlag(MpqFlags.SingleUnit))
+        if (block.Flags.HasFlag(MpqFlags.SingleUnit) || !compressed)
         {
-            if (encrypted)
+            // Read straight into the result when it is stored as is.
+            if (!compressed || block.PackedSize >= block.FileSize)
             {
-                MpqCrypto.Decrypt(raw, key);
+                var plain = new byte[block.PackedSize];
+                ReadAt(_base + block.Offset, plain);
+                DecryptStored(plain, encrypted, key, block.Flags.HasFlag(MpqFlags.SingleUnit));
+                return block.PackedSize == block.FileSize ? plain : plain[..(int)block.FileSize];
             }
-            return compressed && block.PackedSize < block.FileSize ? Decompress(raw, block.Flags, (int)block.FileSize) : raw;
         }
 
-        var sectors = (int)((block.FileSize + _sectorSize - 1) / _sectorSize);
-        var output = new byte[block.FileSize];
-        if (!compressed)
+        // Compressed data is staged in a pooled buffer and decoded into the result, with no per-sector copies.
+        var raw = ArrayPool<byte>.Shared.Rent((int)block.PackedSize);
+        try
         {
+            var packed = raw.AsSpan(0, (int)block.PackedSize);
+            ReadAt(_base + block.Offset, packed);
+            var output = new byte[block.FileSize];
+            if (block.Flags.HasFlag(MpqFlags.SingleUnit))
+            {
+                if (encrypted)
+                {
+                    MpqCrypto.Decrypt(packed, key);
+                }
+                DecompressInto(packed, block.Flags, output, name);
+                return output;
+            }
+
+            var sectors = (int)((block.FileSize + _sectorSize - 1) / _sectorSize);
+            var table = packed[..((sectors + 1) * 4)];
+            if (encrypted)
+            {
+                MpqCrypto.Decrypt(table, key - 1);
+            }
             for (var i = 0; i < sectors; i++)
             {
-                var start = i * _sectorSize;
-                var chunk = raw.AsSpan(start, Math.Min(_sectorSize, (int)block.FileSize - start));
+                var from = (int)BinaryPrimitives.ReadUInt32LittleEndian(table[(i * 4)..]);
+                var to = (int)BinaryPrimitives.ReadUInt32LittleEndian(table[((i + 1) * 4)..]);
+                if (from < 0 || to < from || to > packed.Length)
+                {
+                    throw new InvalidDataException($"{name}: sector {i} lies outside the file");
+                }
+                var chunk = packed[from..to];
                 if (encrypted)
                 {
                     MpqCrypto.Decrypt(chunk, key + (uint)i);
                 }
-                chunk.CopyTo(output.AsSpan(start));
+                var start = i * _sectorSize;
+                var dest = output.AsSpan(start, Math.Min(_sectorSize, (int)block.FileSize - start));
+                if (chunk.Length < dest.Length)
+                {
+                    DecompressInto(chunk, block.Flags, dest, $"{name}: sector {i}");
+                }
+                else if (chunk.Length == dest.Length)
+                {
+                    chunk.CopyTo(dest);
+                }
+                else
+                {
+                    throw new InvalidDataException($"{name}: sector {i} is {chunk.Length} bytes, expected at most {dest.Length}");
+                }
             }
             return output;
         }
-
-        var table = raw.AsSpan(0, (sectors + 1) * 4);
-        if (encrypted)
+        finally
         {
-            MpqCrypto.Decrypt(table, key - 1);
+            ArrayPool<byte>.Shared.Return(raw);
         }
-        var written = 0;
-        for (var i = 0; i < sectors; i++)
-        {
-            var from = (int)BinaryPrimitives.ReadUInt32LittleEndian(table[(i * 4)..]);
-            var to = (int)BinaryPrimitives.ReadUInt32LittleEndian(table[((i + 1) * 4)..]);
-            var chunk = raw.AsSpan(from, to - from);
-            if (encrypted)
-            {
-                MpqCrypto.Decrypt(chunk, key + (uint)i);
-            }
-            var expected = Math.Min(_sectorSize, (int)block.FileSize - i * _sectorSize);
-            var plain = chunk.Length < expected ? Decompress(chunk.ToArray(), block.Flags, expected) : chunk.ToArray();
-            if (plain.Length != expected)
-            {
-                throw new InvalidDataException($"{name}: sector {i} decoded to {plain.Length} bytes, expected {expected}");
-            }
-            plain.CopyTo(output, written);
-            written += plain.Length;
-        }
-        return output;
     }
 
-    public void Dispose() => _stream.Dispose();
+    /// <summary>Stored (uncompressed) data: single-unit files are encrypted as one block, others per sector.</summary>
+    private void DecryptStored(Span<byte> data, bool encrypted, uint key, bool singleUnit)
+    {
+        if (!encrypted)
+        {
+            return;
+        }
+        if (singleUnit)
+        {
+            MpqCrypto.Decrypt(data, key);
+            return;
+        }
+        for (var i = 0; i * _sectorSize < data.Length; i++)
+        {
+            var start = i * _sectorSize;
+            MpqCrypto.Decrypt(data.Slice(start, Math.Min(_sectorSize, data.Length - start)), key + (uint)i);
+        }
+    }
+
+    /// <summary>Decodes one compressed unit (mask byte + body) into exactly <paramref name="destination"/>.</summary>
+    private void DecompressInto(ReadOnlySpan<byte> data, MpqFlags flags, Span<byte> destination, string what)
+    {
+        if (flags.HasFlag(MpqFlags.Implode))
+        {
+            throw new NotSupportedException("PKWARE implode is not supported");
+        }
+        if (data.IsEmpty)
+        {
+            throw new InvalidDataException($"{what}: empty compressed data");
+        }
+        if (data[0] == 0x02)
+        {
+            // zlib only (almost every file): decode in place, no streams.
+            _zlib.Reset();
+            var status = _zlib.Decompress(data[1..], destination, out _, out var written);
+            if (status != OperationStatus.Done || written != destination.Length)
+            {
+                throw new InvalidDataException($"{what}: zlib data decoded to {written} bytes ({status}), expected {destination.Length}");
+            }
+            return;
+        }
+        var plain = Decompress(data.ToArray(), flags, destination.Length);
+        if (plain.Length != destination.Length)
+        {
+            throw new InvalidDataException($"{what}: decoded to {plain.Length} bytes, expected {destination.Length}");
+        }
+        plain.CopyTo(destination);
+    }
+
+    public void Dispose()
+    {
+        _zlib.Dispose();
+        _stream.Dispose();
+    }
+
 
     private static bool IsLive(BlockEntry b) => b.Flags.HasFlag(MpqFlags.Exists) && !b.Flags.HasFlag(MpqFlags.DeleteMarker);
 

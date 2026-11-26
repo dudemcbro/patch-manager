@@ -82,19 +82,24 @@ public sealed partial class ModStore
         // Collapse to one file per (chain, path); later contributions win, differing duplicates are reported.
         var warnings = new List<string>();
         var files = new Dictionary<(string Chain, string Path), ModFile>(new ChainPathComparer());
-        void Sink(Contribution c)
+        var gate = new object();
+        void Sink(Contribution c) // called concurrently for files of one archive
         {
             var path = MpqPath.Normalize(c.Path);
             var fileSha = SourceScanner.Sha256(c.Data);
             WriteBlob(fileSha, c.Data);
-            if (files.TryGetValue((c.Chain, path), out var previous) && previous.Sha256 != fileSha)
+            lock (gate)
             {
-                warnings.Add($"{c.Chain}:{path} appears more than once with different content; using {c.Origin} over {previous.Origin}");
+                if (files.TryGetValue((c.Chain, path), out var previous) && previous.Sha256 != fileSha)
+                {
+                    warnings.Add($"{c.Chain}:{path} appears more than once with different content; using {c.Origin} over {previous.Origin}");
+                }
+                files[(c.Chain, path)] = new ModFile(path, c.Chain, fileSha, c.Data.LongLength, c.Origin);
             }
-            files[(c.Chain, path)] = new ModFile(path, c.Chain, fileSha, c.Data.LongLength, c.Origin);
         }
 
-        var hints = DefaultNameHints().Concat(nameHints ?? []).ToHashSet(MpqPath.Comparer);
+        // Only enumerated when an archive lacks a complete listfile.
+        var hints = DefaultNameHints().Concat(nameHints ?? []);
         ServerDeclaration? declaration = kind == SourceKind.Zip ? null : SourceScanner.ReadDeclaration(full, kind, warnings);
         int unnamed;
         switch (kind)
@@ -218,9 +223,22 @@ public sealed partial class ModStore
         }
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         var tmp = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
-        using (var z = new ZLibStream(File.Create(tmp), CompressionLevel.Fastest))
+        // One-shot zlib (level 1, same format ZLibStream reads back) into a pooled buffer: no stream per blob.
+        var buffer = System.Buffers.ArrayPool<byte>.Shared.Rent((int)Math.Min(int.MaxValue, ZLibEncoder.GetMaxCompressedLength(data.Length)));
+        try
         {
-            z.Write(data);
+            if (!ZLibEncoder.TryCompress(data, buffer, out var written, quality: 1))
+            {
+                throw new IOException($"Could not compress a {data.Length} byte file for the store");
+            }
+            using (var file = File.Create(tmp))
+            {
+                file.Write(buffer, 0, written);
+            }
+        }
+        finally
+        {
+            System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
         }
         File.Move(tmp, path, overwrite: true);
     }

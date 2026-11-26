@@ -94,6 +94,15 @@ public sealed class MergeSession
         return _nameHints;
     }
 
+    /// <summary>Reading the client's stock paths takes a second or two, so only do it when an archive needs them.</summary>
+    private IEnumerable<string> LazyNameHints()
+    {
+        foreach (var name in NameHints())
+        {
+            yield return name;
+        }
+    }
+
     // ---- adding sources ---------------------------------------------------------------------
 
     /// <summary>Adds every custom patch the client currently loads, in the client's load order.</summary>
@@ -174,7 +183,7 @@ public sealed class MergeSession
         }
         try
         {
-            var (mod, _) = _store.Import(full, nameHints: NameHints());
+            var (mod, _) = _store.Import(full, nameHints: LazyNameHints());
             if (Sources.Any(s => s.Mod.Id == mod.Id))
             {
                 return [$"{Path.GetFileName(full)} is identical to a patch already in the list"];
