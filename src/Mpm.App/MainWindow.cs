@@ -337,7 +337,7 @@ public sealed class MainWindow : Window
         var folder = await PickFolder("Choose where to save the merged patch");
         if (folder is not null)
         {
-            await Busy("Saving...", () => $"Saved to {_session.Save(folder)} (copy patch-Z.MPQ to Data and the locale file to Data/{_session.Locale}).");
+            await Busy("Saving...", () => $"Saved to {_session.Save(folder)} (copy the patch-?.MPQ files to Data and the ones in {_session.Locale} to Data/{_session.Locale}).");
         }
     }
 
@@ -408,8 +408,9 @@ public sealed class MainWindow : Window
             return;
         }
         var report = build.Report;
+        // Archive names are only known once written (large builds span several slots); list the chains.
         _report.Text = BuildOutput.Summarize(report, report.Files.Select(f => f.Chain).Distinct()
-            .Select(c => BuildOutput.ArchivePath(c, BuildOutput.DefaultSlot)).ToList());
+            .Select(c => c == Mpm.Core.Client.ArchiveNames.Root ? "patch-<slot>.MPQ" : $"{c}/patch-{c}-<slot>.MPQ").ToList());
 
         var issues = report.Questions.Where(q => q.Kind != "tier").ToList();
         var tiers = report.Questions.Where(q => q.Kind == "tier").ToList();

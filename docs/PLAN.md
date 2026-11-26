@@ -67,6 +67,15 @@ Solution `ModPatchManager.sln`:
 6. Lua/XML text merge. (done; on the Tortoise patch's 5 stock UI overrides: 4 merged and matched exactly, 1 correctly refused (edit at end of file touching the test edit); about 25 ms for a 17 KB file.)
 7. Local-ID auto-renumber with FK rewriting. (done; unit-tested (server vs local, local vs local, unreferenced rows, answer no, server never renumbered). On the Tortoise patch with an older snapshot posing as a local mod, the pass found clashing new rows (Map 900, Spell 200099) but nothing in the snapshot's own changes points at them, so they correctly stayed conflicts; the pass added about 2 s / 230 MB to an 11.5 s build. Not yet tested in game with a real clashing local mod.)
 
+## Large clients (HD packs), 2026-11-26
+A user's HD client has 26 custom patches, about 10 GB compressed and 20+ GB unpacked. Three limits, all fixed:
+- Import ran on one core and allocated per 4 KiB sector (new zlib stream, three copies). Now one reader per core, sectors decode in place with a reused `ZLibDecoder`, store blobs compress in one `ZLibEncoder` call. patch-7 (22k files, 7.7 GB unpacked): 87-122 s -> 18 s.
+- The build held every output file in memory. Now files taken whole from one mod (textures, models, sounds) are decided from manifest size + SHA-256 (the stock copy is read only when sizes match) and stay in the store until the archive is written (`OutputFiles`); only DBCs and text files are read and merged in memory.
+- One output archive cannot exceed 4 GiB (format-0 32-bit offsets). `MpqWriter.WriteParts` packs files in parallel batches and starts a new archive before 3.5 GiB (below the 3.7 GiB stock patch.MPQ, which the client loads). Parts take slots Z, Y, X, ... ; every path is in exactly one part, so their order does not matter. Install and Save skip slots used by patches that keep loading, so no unrelated patch is renamed to make room.
+- Overlapping asset packs raised one question per file (400 on that client). Whole-file conflicts on assets are now one `files:*:<mods>` question per set of mods; DBC and UI files stay per file.
+- Some archives store empty files with no data at all (PackedSize 0); the reader now returns them as empty instead of failing (2 files in that client's patch-f).
+- Result on that client (read-only, into a test store): import of all 26 patches 121 s; build 145 s, peak memory 1.9 GB; output patch-Z/Y/X.MPQ (3.76 / 3.75 / 1.84 GB) + patch-enUS-Z.MPQ (0.39 GB), 100,582 files, each in exactly one archive and byte-identical to a mod's copy (except the 17 merged DBCs); 59 questions. Not yet loaded in game.
+
 ## Findings (M1-M2)
 - Wow.exe (12340) embeds `patch-?.MPQ` (Data\) and `patch-%s-?.MPQ` (Data\<locale>\): exactly one slot character. Renamed copies like `patch-4.MPQ.prev` are ignored by the client.
 - Stock layout: `Interface\`, `DBFilesClient\`, `Fonts\` (and some `Sound\`) live only in the locale chain; models/textures/world only in the root chain. No stock path is in both chains (tested), so root-vs-locale priority never matters for the baseline.

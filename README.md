@@ -13,7 +13,7 @@ Status: Milestones 1-7 done: MPQ/DBC read/write, mod import store, stock baselin
 1. **Choose WoW folder** (the 3.3.5a folder with Wow.exe, or its Data folder).
 2. Add patches: **Add this client's patches** (everything the client currently loads), **Add folder...** (every .mpq/.zip in it and its subfolders), **Add files...**, or drag and drop files and folders onto the list. Later in the list wins.
 3. **Merge**. Anything the tool had to decide (conflicting edits, whether a patch is from your server, rows a patch leaves out, ...) is listed as a yes/no or multiple-choice question with the recommended answer already applied. Change answers and click **Apply answers and merge again**.
-4. **Save merged patch...** writes `patch-Z.MPQ` (and `<locale>/patch-<locale>-Z.MPQ`), or **Install into client** renames the merged patches to `*.mpm-off` (nothing is deleted) and installs the merged one. **Uninstall from client** reverses it.
+4. **Save merged patch...** writes `patch-Z.MPQ` (and `<locale>/patch-<locale>-Z.MPQ`; very large sets such as HD packs continue in `patch-Y`, `patch-X`, ... since one archive must stay under 4 GB, skipping slots other patches still use), or **Install into client** renames the merged patches to `*.mpm-off` (nothing is deleted) and installs the merged one. **Uninstall from client** reverses it.
 
 The app remembers the patch list and your answers per client.
 

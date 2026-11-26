@@ -8,7 +8,7 @@ using Mpm.Core.Store;
 namespace Mpm.Core.Build;
 
 /// <summary>Merged files per chain ("root" or a locale) plus the report explaining every decision.</summary>
-public sealed record BuildResult(IReadOnlyDictionary<string, Dictionary<string, byte[]>> Chains, BuildReport Report);
+public sealed record BuildResult(IReadOnlyDictionary<string, OutputFiles> Chains, BuildReport Report);
 
 /// <summary>Answers to questions from an earlier build, keyed by <see cref="Question.Id"/>.</summary>
 public sealed record BuildOptions(IReadOnlyDictionary<string, string>? Answers = null);
@@ -114,31 +114,56 @@ public sealed partial class PatchBuilder
             var keepLoading = AskIncomplete();
             var renumbered = Renumber(byPath);
 
-            var chains = new Dictionary<string, Dictionary<string, byte[]>>(StringComparer.Ordinal);
+            var chains = new Dictionary<string, OutputFiles>(StringComparer.Ordinal);
             foreach (var (path, contributions) in byPath.OrderBy(kv => kv.Key, MpqPath.Comparer))
             {
-                var hasStock = _b._baseline.TryRead(path, out var stock);
-                var copies = contributions
-                    .Select(c => (c.Mod, Data: renumbered.GetValueOrDefault((c.Mod.Id, path)) ?? _b._store.Read(c.File)))
-                    .Where(c => !hasStock || !c.Data.AsSpan().SequenceEqual(stock))
-                    .ToList();
+                var isDbc = DbcLayouts.IsDbcPath(path);
+                byte[]? stock = null;
+                List<Copy> copies;
+                if (isDbc || TextMerge.IsTextPath(path))
+                {
+                    // Merged by content: read every copy and the stock file.
+                    stock = _b._baseline.TryRead(path, out var s) ? s : null;
+                    copies = contributions
+                        .Select(c => Copy.Loaded(c.Mod, renumbered.GetValueOrDefault((c.Mod.Id, path)) ?? _b._store.Read(c.File)))
+                        .Where(c => stock is null || !c.Data!.AsSpan().SequenceEqual(stock))
+                        .ToList();
+                }
+                else
+                {
+                    // Taken whole (textures, models, sounds, ...): decide from the manifests' sizes and hashes and
+                    // leave the data in the store. The stock copy is only read when a mod's copy has the same size.
+                    var hasStock = _b._baseline.TryGetSize(path, out var stockSize);
+                    string? stockSha = null;
+                    copies = contributions
+                        .Where(c => !hasStock || c.File.Size != stockSize || c.File.Sha256 != (stockSha ??= StockSha(path)))
+                        .Select(c => Copy.Stored(c.Mod, c.File, _b._store))
+                        .ToList();
+                }
                 if (copies.Count == 0)
                 {
                     continue; // every mod's copy equals stock: nothing to write
                 }
 
                 var chain = _b.ChainFor(path);
-                var result = DbcLayouts.IsDbcPath(path) ? MergeDbc(path, chain, hasStock ? stock : null, copies) : null;
-                result ??= MergeWholeFile(path, chain, hasStock ? stock : null, copies);
-                if (result is not { } r || (hasStock && r.Bytes.AsSpan().SequenceEqual(stock)))
+                var result = isDbc ? MergeDbc(path, chain, stock, copies.Select(c => (c.Mod, c.Data!)).ToList()) : null;
+                result ??= MergeWholeFile(path, chain, stock, copies);
+                if (result is not { } r || (stock is not null && r.Bytes is not null && r.Bytes.AsSpan().SequenceEqual(stock)))
                 {
                     continue;
                 }
                 if (!chains.TryGetValue(chain, out var files))
                 {
-                    chains[chain] = files = new Dictionary<string, byte[]>(MpqPath.Comparer);
+                    chains[chain] = files = new OutputFiles();
                 }
-                files[path] = r.Bytes;
+                if (r.Bytes is not null)
+                {
+                    files.Add(path, r.Bytes);
+                }
+                else
+                {
+                    files.Add(path, r.Load);
+                }
                 _decisions.Add(r.Decision);
             }
 
@@ -367,9 +392,26 @@ public sealed partial class PatchBuilder
 
         // ---- merging --------------------------------------------------------------------------
 
-        private sealed record Merged(byte[] Bytes, FileDecision Decision);
+        /// <summary>A merge result: Bytes when built in memory, else Load reads the chosen copy from the store.</summary>
+        private sealed record Merged(byte[]? Bytes, Func<byte[]> Load, FileDecision Decision)
+        {
+            public Merged(byte[] bytes, FileDecision decision) : this(bytes, () => bytes, decision)
+            {
+            }
+        }
 
-        private Merged? MergeWholeFile(string path, string chain, byte[]? stock, List<(ModManifest Mod, byte[] Data)> copies)
+        /// <summary>One mod's copy of a path. Key identifies the content (SHA-256); Data is set when it was read.</summary>
+        private sealed record Copy(ModManifest Mod, string Key, Func<byte[]> Load, byte[]? Data)
+        {
+            public static Copy Loaded(ModManifest mod, byte[] data) => new(mod, Store.SourceScanner.Sha256(data), () => data, data);
+
+            public static Copy Stored(ModManifest mod, ModFile file, ModStore store) => new(mod, file.Sha256, () => store.Read(file), null);
+        }
+
+        private string StockSha(string path) =>
+            _b._baseline.TryRead(path, out var data) ? Store.SourceScanner.Sha256(data) : "";
+
+        private Merged? MergeWholeFile(string path, string chain, byte[]? stock, List<Copy> copies)
         {
             var isDbc = DbcLayouts.IsDbcPath(path);
             var table = TableOf(path);
@@ -383,11 +425,11 @@ public sealed partial class PatchBuilder
             {
                 return null;
             }
-            var distinct = allowed.GroupBy(c => Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(c.Data))).ToList();
+            var distinct = allowed.GroupBy(c => c.Key, StringComparer.Ordinal).ToList();
             if (distinct.Count == 1)
             {
                 var only = allowed.OrderBy(c => _rank[c.Mod.Id]).Last();
-                return new Merged(only.Data, new FileDecision(path, chain, MergeMethod.File, allowed.Select(c => c.Mod.Id).ToList(), 0, 0));
+                return new Merged(only.Data, only.Load, new FileDecision(path, chain, MergeMethod.File, allowed.Select(c => c.Mod.Id).ToList(), 0, 0));
             }
 
             // One representative per distinct content: the highest-priority mod shipping it, in priority order.
@@ -398,13 +440,13 @@ public sealed partial class PatchBuilder
             string? note = null;
             if (stock is not null && TextMerge.IsTextPath(path))
             {
-                var merged = TextMerge.MergeAll(stock, reps.Select(c => c.Data).ToList());
+                var merged = TextMerge.MergeAll(stock, reps.Select(c => c.Data ?? c.Load()).ToList());
                 if (merged.Clean)
                 {
                     var id = $"text:{path}:{string.Join('+', repIds)}";
                     var chosenText = _q.Choose(id, ["merge", .. repIds], "merge");
                     _groups.TryAdd(id, new ConflictGroup { Kind = "text", Path = path, Mods = repIds });
-                    var bytes = chosenText == "merge" ? merged.Bytes! : reps.Last(c => c.Mod.Id == chosenText).Data;
+                    var bytes = chosenText == "merge" ? merged.Bytes! : reps.Last(c => c.Mod.Id == chosenText).Load();
                     if (chosenText != "merge")
                     {
                         _conflicts.Add(new Conflict(path, null, repIds, chosenText, [], id));
@@ -416,14 +458,19 @@ public sealed partial class PatchBuilder
                     : $"They cannot be combined automatically ({merged.Reason}).";
             }
 
-            var chosen = Choose("file", path, repIds, null, [], useTier: isDbc);
+            // Assets (textures, models, sounds) are asked once per set of mods: HD packs overlap on hundreds of files.
+            // DBC and UI files are asked per file, since each one matters on its own.
+            var asset = !isDbc && !TextMerge.IsTextPath(path);
+            var (kind, key) = asset ? ("files", "*") : ("file", path);
+            var chosen = Choose(kind, key, repIds, asset ? path : null, [], useTier: isDbc);
+            var questionId = $"{kind}:{key}:{string.Join('+', repIds)}";
             if (note is not null)
             {
-                _groups[$"file:{path}:{string.Join('+', repIds)}"].Note = note;
+                _groups[questionId].Note = note;
             }
-            _conflicts.Add(new Conflict(path, null, repIds, chosen, [], $"file:{path}:{string.Join('+', repIds)}"));
+            _conflicts.Add(new Conflict(path, null, repIds, chosen, [], questionId));
             var winner = allowed.Last(c => c.Mod.Id == chosen);
-            return new Merged(winner.Data, new FileDecision(path, chain, MergeMethod.File, contributors, 0, 0));
+            return new Merged(winner.Data, winner.Load, new FileDecision(path, chain, MergeMethod.File, contributors, 0, 0));
         }
 
         private Merged? MergeDbc(string path, string chain, byte[]? stock, List<(ModManifest Mod, byte[] Data)> copies)
@@ -710,6 +757,8 @@ public sealed partial class PatchBuilder
                         "Fields only one mod changed are kept from that mod either way."),
                     "newrows" => ($"{names} each add a different row with the same ID in {file} ({g.Rows} ID(s)). Which should win?",
                         $"Example ID {g.SampleRow}. The other mod's row is left out."),
+                    "files" => ($"{names} each ship their own version of {g.Rows} file(s). Which should win?",
+                        $"For example {g.SampleRow}. Usually texture, model or sound packs that overlap; the other mod's versions of these files are not used."),
                     "text" => ($"{names} each change {file}. Their edits do not overlap, so they were combined. Keep the combined file?",
                         $"Path: {g.Path}. Pick a single mod only if the combined file misbehaves in game."),
                     _ => ($"{names} each ship a different {file}. Which should win?", $"{(g.Note is null ? "" : g.Note + " ")}Path: {g.Path}"),

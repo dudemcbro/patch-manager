@@ -53,6 +53,17 @@ public sealed class BaselineChain : IDisposable
     public (string Chain, string Archive)? Locate(string path) =>
         Index().TryGetValue(MpqPath.Normalize(path), out var hit) ? (hit.Chain, hit.Reader.SourcePath) : null;
 
+    /// <summary>Size of the stock copy of a path, without reading it.</summary>
+    public bool TryGetSize(string path, out long size)
+    {
+        if (Index().TryGetValue(MpqPath.Normalize(path), out var hit))
+        {
+            return hit.Reader.TryGetSize(path, out size);
+        }
+        size = 0;
+        return false;
+    }
+
     public bool TryRead(string path, out byte[] data)
     {
         if (Index().TryGetValue(MpqPath.Normalize(path), out var hit))

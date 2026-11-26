@@ -111,6 +111,18 @@ public sealed class MpqReader : IDisposable
     /// <summary>True when the archive holds a delete marker for the path (hides it in lower archives).</summary>
     public bool IsDeleted(string path) => Find(path) is { } b && b.Flags.HasFlag(MpqFlags.DeleteMarker);
 
+    /// <summary>Uncompressed size of a file from the block table, without reading it.</summary>
+    public bool TryGetSize(string path, out long size)
+    {
+        if (Find(path) is { } b && IsLive(b))
+        {
+            size = b.FileSize;
+            return true;
+        }
+        size = 0;
+        return false;
+    }
+
     public bool TryRead(string path, out byte[] data)
     {
         if (!Contains(path))
@@ -130,6 +142,10 @@ public sealed class MpqReader : IDisposable
             throw new FileNotFoundException($"{name} not found in {SourcePath}");
         }
 
+        if (block.FileSize == 0)
+        {
+            return []; // empty files may store nothing at all, not even a sector table
+        }
         var encrypted = block.Flags.HasFlag(MpqFlags.Encrypted);
         var key = encrypted ? MpqCrypto.FileKey(name, block.Offset, block.FileSize, block.Flags.HasFlag(MpqFlags.FixKey)) : 0;
         var compressed = (block.Flags & (MpqFlags.Compress | MpqFlags.Implode)) != 0;

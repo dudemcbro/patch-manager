@@ -9,7 +9,6 @@ namespace Mpm.Core.Build;
 /// <summary>Writes a build to a folder laid out like a client Data dir: patch-&lt;slot&gt;.MPQ and &lt;loc&gt;/patch-&lt;loc&gt;-&lt;slot&gt;.MPQ.</summary>
 public static class BuildOutput
 {
-    public const string DefaultSlot = "Z";
     public const string ReportFile = "build-report.json";
     public const string SummaryFile = "build-report.txt";
 
@@ -28,12 +27,25 @@ public static class BuildOutput
     public static string ArchivePath(string chain, string slot) =>
         chain == ArchiveNames.Root ? $"patch-{slot}.MPQ" : Path.Combine(chain, $"patch-{chain}-{slot}.MPQ");
 
-    /// <summary>Writes the archives and reports into an empty or new folder. Returns archive paths relative to it.</summary>
-    public static IReadOnlyList<string> Write(BuildResult result, string outDir, string slot = DefaultSlot)
+    /// <summary>Custom slots in the order the output uses them: highest priority first (Z, Y, ..., A, 9, ..., 4).</summary>
+    public static IReadOnlyList<string> DefaultSlots { get; } =
+        Enumerable.Range(0, 26).Select(i => ((char)('Z' - i)).ToString()).Concat(Enumerable.Range(0, 6).Select(i => (9 - i).ToString())).ToList();
+
+    /// <summary>
+    /// Writes the archives and reports into an empty or new folder. Each chain fills as many archives as it
+    /// needs (each under <paramref name="maxArchiveBytes"/>), taking slots from <paramref name="slots"/> in order
+    /// (default <see cref="DefaultSlots"/>). Returns archive paths relative to the folder.
+    /// </summary>
+    public static IReadOnlyList<string> Write(BuildResult result, string outDir, IReadOnlyList<string>? slots = null,
+        long maxArchiveBytes = MpqWriter.DefaultMaxArchiveBytes)
     {
-        if (slot.Length != 1 || !char.IsAsciiLetterOrDigit(slot[0]))
+        slots ??= DefaultSlots;
+        foreach (var slot in slots)
         {
-            throw new ArgumentException("Slot must be one letter or digit", nameof(slot));
+            if (slot.Length != 1 || !char.IsAsciiLetterOrDigit(slot[0]) || ArchiveNames.IsStockSlot(slot))
+            {
+                throw new ArgumentException($"Not a custom patch slot: '{slot}'", nameof(slots));
+            }
         }
         if (Directory.Exists(outDir) && Directory.EnumerateFileSystemEntries(outDir).Any())
         {
@@ -43,9 +55,10 @@ public static class BuildOutput
         var written = new List<string>();
         foreach (var (chain, files) in result.Chains.OrderBy(c => c.Key, StringComparer.Ordinal))
         {
-            var rel = ArchivePath(chain, slot.ToUpperInvariant());
-            MpqWriter.Write(Path.Combine(outDir, rel), files);
-            written.Add(rel);
+            var parts = MpqWriter.WriteParts(files.Loaders, part => part < slots.Count
+                ? Path.Combine(outDir, ArchivePath(chain, slots[part].ToUpperInvariant()))
+                : throw new IOException($"The merged {chain} files need more than the {slots.Count} free patch slots"), maxArchiveBytes);
+            written.AddRange(parts.Select(p => Path.GetRelativePath(outDir, p)));
         }
         File.WriteAllBytes(Path.Combine(outDir, ReportFile), JsonSerializer.SerializeToUtf8Bytes(result.Report, Json));
         File.WriteAllText(Path.Combine(outDir, SummaryFile), Summarize(result.Report, written));

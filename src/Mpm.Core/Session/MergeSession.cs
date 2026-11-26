@@ -264,7 +264,8 @@ public sealed class MergeSession
         var target = Directory.Exists(folder) && Directory.EnumerateFileSystemEntries(folder).Any()
             ? Path.Combine(folder, $"merged-patch-{DateTime.Now:yyyyMMdd-HHmmss}")
             : folder;
-        BuildOutput.Write(build, target);
+        // Same slots Install would use, so the saved files can be copied in without replacing a patch that stays.
+        BuildOutput.Write(build, target, Client is null ? null : FreeSlots(InstallPreview()));
         return target;
     }
 
@@ -286,13 +287,13 @@ public sealed class MergeSession
         }
         var disable = InstallPreview();
         var dir = Path.Combine(_buildsDir, DateTime.Now.ToString("yyyyMMdd-HHmmss-fff"));
-        BuildOutput.Write(build, dir);
+        BuildOutput.Write(build, dir, FreeSlots(disable));
         return new Installer(client.DataDir).Apply(dir, disable);
     }
 
     /// <summary>
     /// The client patches Install would rename so they stop loading: custom patches identical to a merged
-    /// source, minus ones kept loading, plus whatever occupies the output slot.
+    /// source, minus ones kept loading. The merged patch goes into slots no other patch uses.
     /// </summary>
     public List<string> InstallPreview()
     {
@@ -301,9 +302,20 @@ public sealed class MergeSession
         var keep = build.Report.KeepLoading.ToHashSet(StringComparer.Ordinal);
         var merged = Sources.Where(s => !keep.Contains(s.Mod.Id)).Select(s => s.Mod.Source.Sha256).ToHashSet(StringComparer.Ordinal);
         return client.CustomPatches()
-            .Where(p => merged.Contains(Installer.Sha256File(p.Path)) || p.Slot == BuildOutput.DefaultSlot)
+            .Where(p => merged.Contains(Installer.Sha256File(p.Path)))
             .Select(p => p.Path)
             .ToList();
+    }
+
+    /// <summary>Output slots (highest first) that no patch still loading after <paramref name="disabled"/> uses, in any chain.</summary>
+    private List<string> FreeSlots(IReadOnlyCollection<string> disabled)
+    {
+        var off = disabled.Select(Path.GetFullPath).ToHashSet(StringComparer.Ordinal);
+        var used = RequireClient().CustomPatches()
+            .Where(p => !off.Contains(Path.GetFullPath(p.Path)))
+            .Select(p => p.Slot.ToUpperInvariant())
+            .ToHashSet(StringComparer.Ordinal);
+        return BuildOutput.DefaultSlots.Where(s => !used.Contains(s)).ToList();
     }
 
     public UnapplyResult Uninstall() => new Installer(RequireClient().DataDir).Unapply();
