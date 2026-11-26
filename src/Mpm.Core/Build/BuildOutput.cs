@@ -66,7 +66,8 @@ public static class BuildOutput
         sb.AppendLine($"Locale: {report.Locale}");
         sb.AppendLine($"Archives: {string.Join(", ", archives)}");
         var rows = report.Files.Where(f => f.Method == MergeMethod.Rows).ToList();
-        sb.AppendLine($"Files: {report.Files.Count} ({rows.Count} DBCs merged by field, {report.Files.Count - rows.Count} whole files)");
+        var texts = report.Files.Count(f => f.Method == MergeMethod.Text);
+        sb.AppendLine($"Files: {report.Files.Count} ({rows.Count} DBCs merged by field, {texts} text files combined, {report.Files.Count - rows.Count - texts} whole files)");
         foreach (var f in rows)
         {
             var extra = (f.RowsRemoved > 0 ? $", {f.RowsRemoved} removed" : "") + (f.RowsCombined > 0 ? $", {f.RowsCombined} combine edits from several mods" : "");

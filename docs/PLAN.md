@@ -41,7 +41,8 @@ Solution `ModPatchManager.sln`:
   - `Install/` (done, M3) - `Installer.Apply` renames patches to `<name>.mpm-off` (never deletes; also renames whatever already occupies the build's slot), installs the build archives, and writes `Data/.mpm-ledger.json` after every step. `Unapply` deletes only archives it installed whose hash still matches (else moves them to `.mpm-modified`), renames everything back, verifies hashes. CLI default: disable the client's custom patches byte-identical to a mod in the build.
   - M4 (done): `PatchBuilder` merges DBCs field by field against stock (3-way). Tiers per mod: answer > `mpm-server.json` (folder/zip root or inside an MPQ) > auto (Server if it changes any gameplay field or adds gameplay rows). Classification in `data/classification-3.3.5.12340.json` (our own data): cosmetic tables and cosmetic columns of mixed tables; all text and server-sent IDs are gameplay. Local mods' gameplay edits are dropped unless the user keeps them; Server changes beat Local on the same field by default.
   - Questions (done, M4): every judgment call is a `Question` with a stable id, options, default and chosen value: `tier:<mod>`, `rows:<path>:<mods>` (same field changed differently), `newrows:<path>:<mods>` (same new ID), `file:<path>:<mods>`, `removals:<path>:<mod>` (mod lacks stock rows; default keep), `localgameplay:<mod>`, `incomplete:<mod>` (unidentified files; default keep the source patch loading). Answers go back in via `BuildOptions` (CLI: `build --answers build-questions.json`). The GUI presents these.
-  - `Merge/` (planned) - remaining per-file-type strategies:
+  - `Merge/TextMerge` (done, M6) - line-based 3-way merge (Myers diff vs stock, common prefix/suffix trimmed, gives up above 4000 edits) for `.lua`, `.xml`, `.toc` that exist in stock. Separate edits combine; identical edits are taken once; overlapping or adjacent edits are a conflict (git's rule). CRLF and BOM preserved; non-UTF-8 files are not merged. In the build: clean merge -> `text:<path>:<mods>` question, default "Combined"; conflict -> the `file:` question with "edits overlap near line N" in its detail.
+  - Remaining per-file-type strategies (original plan, for reference):
     - DBC: row-level 3-way merge on ID, field diffs vs baseline, tier rules, cosmetic allow-list, override application.
     - Lua/XML/TOC: 3-way text merge vs stock; on conflict fall back to priority + report.
     - Binary assets: priority only, report.
@@ -63,7 +64,7 @@ Solution `ModPatchManager.sln`:
    - Packages: Linux AppImage (tested), Windows and macOS (built but NOT tested by the user; say so in release notes).
    - Profiles / saved answers per server.
    (done: `Mpm.App` (code-only Avalonia UI) over `Mpm.Core.Session.MergeSession`; per-client profiles in `<app data>/profiles`; install builds kept in `<app data>/builds`; headless UI tests in `tests/Mpm.App.Tests` (xunit v3, required by Avalonia.Headless.XUnit 12); `packaging/` scripts build the AppImage (smoke-tested: launches) and cross-build Windows/macOS zips (untested, unsigned).)
-6. Lua/XML text merge.
+6. Lua/XML text merge. (done; on the Tortoise patch's 5 stock UI overrides: 4 merged and matched exactly, 1 correctly refused (edit at end of file touching the test edit); about 25 ms for a 17 KB file.)
 7. Local-ID auto-renumber with FK rewriting.
 
 ## Findings (M1-M2)

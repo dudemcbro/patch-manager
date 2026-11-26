@@ -1,6 +1,7 @@
 using System.Globalization;
 using Mpm.Core.Client;
 using Mpm.Core.Dbc;
+using Mpm.Core.Merge;
 using Mpm.Core.Mpq;
 using Mpm.Core.Store;
 
@@ -86,6 +87,7 @@ public sealed class PatchBuilder
             public int Rows;
             public readonly HashSet<string> Columns = new(StringComparer.Ordinal);
             public string? SampleRow;
+            public string? Note;
         }
 
         public Run(PatchBuilder builder, IReadOnlyList<ModManifest> mods, BuildOptions options)
@@ -123,7 +125,7 @@ public sealed class PatchBuilder
 
                 var chain = _b.ChainFor(path);
                 var result = DbcLayouts.IsDbcPath(path) ? MergeDbc(path, chain, hasStock ? stock : null, copies) : null;
-                result ??= MergeWholeFile(path, chain, copies);
+                result ??= MergeWholeFile(path, chain, hasStock ? stock : null, copies);
                 if (result is not { } r || (hasStock && r.Bytes.AsSpan().SequenceEqual(stock)))
                 {
                     continue;
@@ -363,7 +365,7 @@ public sealed class PatchBuilder
 
         private sealed record Merged(byte[] Bytes, FileDecision Decision);
 
-        private Merged? MergeWholeFile(string path, string chain, List<(ModManifest Mod, byte[] Data)> copies)
+        private Merged? MergeWholeFile(string path, string chain, byte[]? stock, List<(ModManifest Mod, byte[] Data)> copies)
         {
             var isDbc = DbcLayouts.IsDbcPath(path);
             var table = TableOf(path);
@@ -378,20 +380,46 @@ public sealed class PatchBuilder
                 return null;
             }
             var distinct = allowed.GroupBy(c => Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(c.Data))).ToList();
-            var winner = allowed[^1];
-            if (distinct.Count > 1)
+            if (distinct.Count == 1)
             {
-                // One representative per distinct content: the highest-priority mod shipping it.
-                var reps = distinct.Select(g => g.OrderBy(c => _rank[c.Mod.Id]).Last().Mod.Id).ToList();
-                var chosen = Choose("file", path, reps, null, [], useTier: isDbc);
-                winner = allowed.Last(c => c.Mod.Id == chosen);
-                _conflicts.Add(new Conflict(path, null, reps, chosen, [], $"file:{path}:{string.Join('+', reps.OrderBy(m => _rank[m]))}"));
+                var only = allowed.OrderBy(c => _rank[c.Mod.Id]).Last();
+                return new Merged(only.Data, new FileDecision(path, chain, MergeMethod.File, allowed.Select(c => c.Mod.Id).ToList(), 0, 0));
             }
-            else
+
+            // One representative per distinct content: the highest-priority mod shipping it, in priority order.
+            var reps = distinct.Select(g => g.OrderBy(c => _rank[c.Mod.Id]).Last()).OrderBy(c => _rank[c.Mod.Id]).ToList();
+            var repIds = reps.Select(c => c.Mod.Id).ToList();
+            var contributors = allowed.Select(c => c.Mod.Id).ToList();
+
+            string? note = null;
+            if (stock is not null && TextMerge.IsTextPath(path))
             {
-                winner = allowed.OrderBy(c => _rank[c.Mod.Id]).Last();
+                var merged = TextMerge.MergeAll(stock, reps.Select(c => c.Data).ToList());
+                if (merged.Clean)
+                {
+                    var id = $"text:{path}:{string.Join('+', repIds)}";
+                    var chosenText = _q.Choose(id, ["merge", .. repIds], "merge");
+                    _groups.TryAdd(id, new ConflictGroup { Kind = "text", Path = path, Mods = repIds });
+                    var bytes = chosenText == "merge" ? merged.Bytes! : reps.Last(c => c.Mod.Id == chosenText).Data;
+                    if (chosenText != "merge")
+                    {
+                        _conflicts.Add(new Conflict(path, null, repIds, chosenText, [], id));
+                    }
+                    return new Merged(bytes, new FileDecision(path, chain, MergeMethod.Text, contributors, 0, 0));
+                }
+                note = merged.ConflictLine is { } line
+                    ? $"Their edits overlap near line {line} of the original file, so they cannot be combined automatically."
+                    : $"They cannot be combined automatically ({merged.Reason}).";
             }
-            return new Merged(winner.Data, new FileDecision(path, chain, MergeMethod.File, allowed.Select(c => c.Mod.Id).ToList(), 0, 0));
+
+            var chosen = Choose("file", path, repIds, null, [], useTier: isDbc);
+            if (note is not null)
+            {
+                _groups[$"file:{path}:{string.Join('+', repIds)}"].Note = note;
+            }
+            _conflicts.Add(new Conflict(path, null, repIds, chosen, [], $"file:{path}:{string.Join('+', repIds)}"));
+            var winner = allowed.Last(c => c.Mod.Id == chosen);
+            return new Merged(winner.Data, new FileDecision(path, chain, MergeMethod.File, contributors, 0, 0));
         }
 
         private Merged? MergeDbc(string path, string chain, byte[]? stock, List<(ModManifest Mod, byte[] Data)> copies)
@@ -678,8 +706,14 @@ public sealed class PatchBuilder
                         "Fields only one mod changed are kept from that mod either way."),
                     "newrows" => ($"{names} each add a different row with the same ID in {file} ({g.Rows} ID(s)). Which should win?",
                         $"Example ID {g.SampleRow}. The other mod's row is left out."),
-                    _ => ($"{names} each ship a different {file}. Which should win?", $"Path: {g.Path}"),
+                    "text" => ($"{names} each change {file}. Their edits do not overlap, so they were combined. Keep the combined file?",
+                        $"Path: {g.Path}. Pick a single mod only if the combined file misbehaves in game."),
+                    _ => ($"{names} each ship a different {file}. Which should win?", $"{(g.Note is null ? "" : g.Note + " ")}Path: {g.Path}"),
                 };
+                if (g.Kind == "text")
+                {
+                    options = [new("merge", "Combined (both mods' edits)"), .. g.Mods.Select(m => new QuestionOption(m, $"Only {Name(m)}"))];
+                }
                 _q.Describe(id, g.Kind, prompt, detail, options);
             }
             foreach (var (mod, (_, files)) in _localGameplay)

@@ -75,6 +75,9 @@ public static class FakeClient
         return DbcTable.Read(DbcFile.Parse(dbc), Titles, pool).Rows.ToDictionary(r => r[0], r => (pool.Get(r[nameCol]), r[maskCol]));
     }
 
+    public static readonly byte[] StockLua = System.Text.Encoding.UTF8.GetBytes(
+        "local a = 1\r\nlocal b = 2\r\nlocal c = 3\r\nlocal d = 4\r\nlocal e = 5\r\nlocal f = 6\r\n");
+
     /// <summary>Creates Data/patch.MPQ (root) and Data/enUS/locale-enUS.MPQ (stock CharTitles + a stock lua).</summary>
     public static string Create(string root)
     {
@@ -88,7 +91,7 @@ public static class FakeClient
         {
             ["DBFilesClient\\CharTitles.dbc"] = TitlesDbc((1, "Private"), (2, "Corporal"), (3, "Sergeant")),
             ["DBFilesClient\\SpellIcon.dbc"] = IconsDbc((1, "Interface\\Icons\\Stock1"), (2, "Interface\\Icons\\Stock2")),
-            ["Interface\\FrameXML\\Stock.lua"] = "stock"u8.ToArray(),
+            ["Interface\\FrameXML\\Stock.lua"] = StockLua,
         });
         return data;
     }

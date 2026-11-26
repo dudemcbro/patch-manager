@@ -205,3 +205,72 @@ public class TierMergeTests
         Assert.Contains(report.Warnings, w => w.Contains("rows:nothing"));
     }
 }
+
+public class TextFileMergeTests
+{
+    private const string Lua = "Interface\\FrameXML\\Stock.lua";
+
+    private static byte[] Edit(params (int Line, string Text)[] edits)
+    {
+        var lines = System.Text.Encoding.UTF8.GetString(FakeClient.StockLua).Split("\r\n")[..^1];
+        foreach (var (line, text) in edits)
+        {
+            lines[line] = text;
+        }
+        return System.Text.Encoding.UTF8.GetBytes(string.Concat(lines.Select(l => l + "\r\n")));
+    }
+
+    private static (TempDir, ModStore, BaselineChain) Setup()
+    {
+        var tmp = new TempDir();
+        var data = FakeClient.Create(tmp.Path);
+        return (tmp, new ModStore(tmp.File("store")), new BaselineChain(data, "enUS"));
+    }
+
+    private static ModManifest Mod(TempDir tmp, ModStore store, string slot, byte[] lua)
+    {
+        var path = tmp.File($"patch-{slot}.MPQ");
+        MpqWriter.Write(path, new Dictionary<string, byte[]> { [Lua] = lua });
+        return store.Import(path).Manifest;
+    }
+
+    [Fact]
+    public void SeparateLuaEdits_AreCombined_ByDefault()
+    {
+        var (tmp, store, baseline) = Setup();
+        using var _ = tmp;
+        using var __ = baseline;
+        var a = Mod(tmp, store, "4", Edit((0, "local a = 100")));
+        var b = Mod(tmp, store, "5", Edit((4, "local e = 500")));
+        var builder = new PatchBuilder(store, baseline, DbcLayouts.For335());
+
+        var result = builder.Build([a, b]);
+
+        Assert.Equal(Edit((0, "local a = 100"), (4, "local e = 500")), result.Chains["enUS"][Lua]);
+        Assert.Equal(MergeMethod.Text, result.Report.Files.Single().Method);
+        Assert.Empty(result.Report.Conflicts);
+        var q = Assert.Single(result.Report.Questions, q => q.Kind == "text");
+        Assert.Equal("merge", q.Default);
+        Assert.Equal(["merge", a.Id, b.Id], q.Options.Select(o => o.Value));
+
+        var onlyA = builder.Build([a, b], new BuildOptions(new Dictionary<string, string> { [q.Id] = a.Id }));
+        Assert.Equal(Edit((0, "local a = 100")), onlyA.Chains["enUS"][Lua]);
+    }
+
+    [Fact]
+    public void OverlappingLuaEdits_FallBackToPickingOne_WithTheLineInTheQuestion()
+    {
+        var (tmp, store, baseline) = Setup();
+        using var _ = tmp;
+        using var __ = baseline;
+        var a = Mod(tmp, store, "4", Edit((2, "local c = 'A'")));
+        var b = Mod(tmp, store, "5", Edit((2, "local c = 'B'")));
+
+        var result = new PatchBuilder(store, baseline, DbcLayouts.For335()).Build([a, b]);
+
+        Assert.Equal(Edit((2, "local c = 'B'")), result.Chains["enUS"][Lua]);
+        var q = Assert.Single(result.Report.Questions, q => q.Kind == "file");
+        Assert.Contains("near line 3", q.Detail);
+        Assert.Single(result.Report.Conflicts);
+    }
+}

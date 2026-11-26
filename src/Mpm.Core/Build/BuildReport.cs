@@ -8,6 +8,8 @@ public enum MergeMethod
     Rows,
     /// <summary>Whole file taken from one mod.</summary>
     File,
+    /// <summary>Text file (Lua/XML/TOC) combined line by line from several mods.</summary>
+    Text,
 }
 
 public enum TierSource
