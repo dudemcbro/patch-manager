@@ -3,6 +3,8 @@ Mod Patch Manager - Windows / macOS build
 These builds are produced on Linux and have NOT been tested on Windows or macOS.
 Please report problems.
 
+The Windows launcher is a work in progress and may not start or behave correctly yet.
+
 Windows: unzip and run ModPatchManager.exe. SmartScreen may warn because the
 program is not signed ("More info" -> "Run anyway").
 

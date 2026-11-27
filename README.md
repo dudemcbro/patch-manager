@@ -1,4 +1,4 @@
-# mod-patch-manager
+# patch-manager
 
 Desktop tool for AzerothCore 3.3.5a WoW clients that merges many mod patches into one generated patch MPQ.
 
@@ -22,7 +22,7 @@ The app remembers the patch list and your answers per client.
 | Platform | Package | Status |
 |---|---|---|
 | Linux x86_64 | `ModPatchManager-<ver>-x86_64.AppImage` | Tested (Bazzite) |
-| Windows x64 | `ModPatchManager-<ver>-win-x64.zip` | Built on Linux, **not tested** |
+| Windows x64 | `ModPatchManager-<ver>-win-x64.zip` | **Work in progress**: the Windows launcher is not finished. Built on Linux, **not tested** |
 | macOS Apple Silicon / Intel | `ModPatchManager-<ver>-osx-arm64.zip` / `-osx-x64.zip` | Built on Linux, unsigned, **not tested** |
 
 Build them with `packaging/build-all.sh` (needs `appimagetool` for the AppImage and `zip`); output goes to `dist/`. See `docs/PLAN.md`.
